@@ -1,0 +1,283 @@
+.todoContainer {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px 0px;
+  min-height: 100vh;
+}
+
+.addTodo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-items: center;
+  gap: 14px;
+  border: 3px solid #ffd900;
+  border-radius: 11px;
+  width: 80%;
+}
+
+.addTodo > input {
+  background-color: white;
+  /* border: 2px solid black; */
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  font-size: 24px;
+  font-weight: 500;
+  padding: 2px 8px;
+  height: 40px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.addTodo > button {
+  height: 40px;
+  width: 120px;
+  background-color: #ffd900;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-sizing: border-box;
+  padding: 0;
+  line-height: 1;
+}
+
+.todoListContainer {
+  width: 80%;
+  display: flex;
+  gap: 14px;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+}
+
+.todoListItem {
+  box-sizing: border-box;
+  background: white;
+  border: 2px solid #ffd900;
+  border-radius: 8px;
+  display: flex;
+  align-items: start;
+  padding: 10px;
+  justify-items: center;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.todoListItemButtons {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.todoListItemButtons > button {
+  border: none;
+  padding: 4px 14px;
+  border-radius: 8px;
+}
+
+.todoListItemHead {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.listItemButtons {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  gap: 4px;
+}
+
+.listItemButton {
+  width: 100px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+  opacity: 0.7;
+}
+
+.listItemButton:hover {
+  opacity: 1;
+}
+
+.listItemButton:active {
+  transform: scale(0.95);
+}
+
+.listItemIcons {
+  font-size: 12px;
+}
+
+.todoItemStats {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-items: space-between;
+}
+
+.todoStatus {
+  font-size: 15px;
+  background-color: #ffd900;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.listItemDuration {
+  font-size: 13px;
+  font-weight: 600;
+  width: 200px;
+}
+
+.listItemDuration > span {
+  text-decoration: underline;
+}
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.hidden {
+  display: none;
+}
+
+.logPopUp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todoTitle {
+  cursor: pointer;
+}
+
+.closeButton {
+  display: flex;
+  align-items: start;
+  justify-content: end;
+  position: absolute;
+  right: 0;
+}
+
+.closeButton > button {
+  border: none;
+  padding: 4px 8px;
+  background-color: red;
+  font-size: 16px;
+  border-radius: 8px;
+  color: white;
+}
+
+.logContent {
+  display: flex;
+  width: 100%;
+}
+
+.logStepIcon {
+  padding-left: 20px;
+  color: green;
+}
+
+.logStep {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+
+.logStepType {
+  width: 80px;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.popUpBox {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: white;
+  padding: 20px;
+  border: 2px solid black;
+  border-radius: 0 0 20px 20px;
+  margin-block-start: -30px;
+  z-index: -1;
+  padding-block-start: 30px;
+}
+
+.pending {
+  background-color: rgba(255, 0, 0, 0.121);
+  color: red;
+}
+
+.inProgress {
+  background-color: rgba(255, 166, 0, 0.144);
+  color: orange;
+}
+
+.completed {
+  background-color: rgba(0, 255, 0, 0.129);
+  color: rgb(0, 212, 0);
+}
+
+.blue {
+  background-color: rgba(12, 120, 236, 0.245);
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.green {
+  background-color: rgba(0, 245, 0, 0.256);
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.yellow {
+  background-color: rgba(255, 255, 0, 0.284);
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.red {
+  background-color: rgba(255, 0, 0, 0.126);
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.iconBlue {
+  color: rgb(12, 120, 236);
+}
+
+.iconRed {
+  color: rgba(255, 0, 0, 0.948);
+}
+
+.iconYellow {
+  color: rgb(255, 225, 0);
+}
+
+.iconGreen {
+  color: rgb(0, 185, 0);
+}
+
+.popup-control {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
