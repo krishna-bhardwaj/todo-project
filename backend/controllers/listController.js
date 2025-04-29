@@ -1,7 +1,6 @@
 const User = require("../models/userModel");
 const List = require("../models/listModel");
 
-//create
 exports.createTask = async (req, res, next) => {
   try {
     const { title, user } = req.body;
@@ -14,7 +13,6 @@ exports.createTask = async (req, res, next) => {
   }
 };
 
-// getTask
 exports.getTasks = async (req, res, next) => {
   try {
     const list = await List.find({ user: req.body.username });
@@ -30,10 +28,8 @@ exports.getTasks = async (req, res, next) => {
   }
 };
 
-//
 const checkActive = async (user) => {
   let activeTasks = await List.find({ user: user, isActive: 1 });
-  // console.log(activeTasks);
   if (activeTasks.length !== 0) return true;
   return false;
 };
