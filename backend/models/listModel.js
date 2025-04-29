@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const listSchema = new mongoose.Schema({
   todoTitle: {
     type: String,

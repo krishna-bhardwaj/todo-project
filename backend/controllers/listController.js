@@ -1,4 +1,3 @@
-const User = require("../models/userModel");
 const List = require("../models/listModel");
 
 exports.createTask = async (req, res, next) => {

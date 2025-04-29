@@ -9,12 +9,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res, next) => {
+app.get('/healthz', (req, res, next) => {
     try {
-        res.send('this is my first server');
+        res.send('ok');
     } catch (err) {
-        next();
+        next(err);
     }
+});
+
+app.use((err, _, res, __) => {
+    console.error(err.stack);
+    res.status(500).send("Something went wrong!");
 });
 
 app.use('/api/v1', userRouter);
