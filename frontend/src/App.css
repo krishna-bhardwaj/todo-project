@@ -36,3 +36,40 @@
     transform: rotate(360deg);
   }
 }
+
+.home-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-page-container {
+  margin-block-start: -7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-page-heading {
+  font-size: xxx-large;
+  margin-block-end: 0rem;
+}
+
+.add-todo-button {
+  border-radius: 2rem;
+  padding-inline: 1rem;
+  padding-block: 0.5rem;
+  border: none;
+  font-size: large;
+  color: #ffd900;
+  font-weight: 600;
+  background: #333;
+  cursor: pointer;
+  margin-inline: 0.5rem;
+
+}
+
+.add-todo-button:hover {
+  background-color: #111;
+}
