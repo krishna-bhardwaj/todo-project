@@ -2,8 +2,8 @@ import React from "react";
 import "../styles/signup.css";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { LoginContext } from "../store/loginContext";
-import { TodoItemsContext } from "../store/todoContext";
+import { LoginContext } from "../../store/loginContext";
+import { TodoItemsContext } from "../../store/todoContext";
 const LogIn = () => {
   const { dispatchTasks } = useContext(LoginContext);
   const { dispatchAction } = useContext(TodoItemsContext);

@@ -1,4 +1,3 @@
-import React from "react";
 import "../styles/HomePage.css";
 import { useContext } from "react";
 import { LoginContext } from "../store/loginContext";
