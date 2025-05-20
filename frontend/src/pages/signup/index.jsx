@@ -1,14 +1,18 @@
 import { useRef } from "react";
 import { Button, Input } from "../../components";
 import { Link } from "react-router-dom";
+import authApi from "../../services/auth";
 
 const SignUp = () => {
   const ref = useRef();
 
+  const [signup] = authApi.useSignupMutation();
+
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log("register");
-    console.log(ref);
+    const formData = new FormData(ref.current);
+    const credentials = Object.fromEntries(formData.entries());
+    signup(credentials);
   };
 
   return (
@@ -28,6 +32,7 @@ const SignUp = () => {
         <Input
           label="Email"
           type="email"
+          name="email"
           required
           placeholder="Enter your email"
         />
@@ -36,6 +41,7 @@ const SignUp = () => {
         <Input
           label="Username"
           type="text"
+          name="username"
           required
           placeholder="Choose a username"
         />
@@ -43,6 +49,7 @@ const SignUp = () => {
         <Input
           label="Password"
           type="password"
+          name="password"
           required
           minLength={5}
           placeholder="Create a password"

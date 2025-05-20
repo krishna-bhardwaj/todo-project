@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
 //SIGN UP
-exports.register = async (req, res, next) => {
+exports.signup = async (req, res, next) => {
     try {
         const { email, username, password } = req.body;
         const hashedPassword = bcrypt.hashSync(password);
