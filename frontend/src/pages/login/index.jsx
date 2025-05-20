@@ -1,14 +1,18 @@
 import { useRef } from "react";
 import { Button, Input } from "../../components";
 import {Link} from "react-router-dom";
+import authApi from "../../services/auth";
 
 const LogIn = () => {
   const ref = useRef();
 
+  const [login] = authApi.useLoginMutation();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submit");
-    console.log(ref);
+    const formData = new FormData(ref.current);
+    const credentials = Object.fromEntries(formData.entries());
+    login(credentials);
   };
 
   return (
@@ -26,6 +30,7 @@ const LogIn = () => {
         </p>
         <Input  
           label="Username"
+          name="username"
           required
           placeholder="Enter your username"
         
@@ -33,6 +38,7 @@ const LogIn = () => {
         <Input 
           label="Password"
           type="password"
+          name="password"
           required
           minLength={5}
           placeholder="Enter your password"

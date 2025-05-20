@@ -1,10 +1,11 @@
-const Input = ({type="text",required=false,placeholder="Enter", minLength, label}) => {
+const Input = ({type="text",name, required=false,placeholder="Enter", minLength, label}) => {
     return (
         <div className="flex flex-col gap-2">
             {
                 label && <label className="text-sm font-medium text-gray-700">{label}</label>
             }
             <input
+                name={name}
                 type={type}
                 required={required}
                 placeholder={placeholder}
