@@ -2,7 +2,7 @@ import { Button } from "../../components";
 
 const HomePage = () => {
   return (
-    <div className=" w-full h-full flex flex-col items-center justify-center bg-gray-100 text-center px-6">
+    <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-center px-6">
       <h1 className="text-4xl font-bold text-gray-800 mb-4">
         Take Control of Your Day
       </h1>
