@@ -1,80 +1,64 @@
-import React from "react";
-import "../styles/signup.css";
-import { useNavigate } from 'react-router-dom';
+import { useRef } from "react";
+import { Button, Input } from "../../components";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
-  const navigate = useNavigate();
-  const handleRegister = async (e) => {
+  const ref = useRef();
+
+  const handleRegister = (e) => {
     e.preventDefault();
-    const email = e.target.email.value;
-    const username = e.target.username.value;
-    const password = e.target.password.value;
-    const response = await fetch("http://localhost:5000/api/v1/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        username,
-        password,
-      }),
-    });
-    const json = await response.json(); 
-    if(json.message === "You have registered.") {
-      alert("You have registered. Proceed to Log In.");
-      navigate("/login");
-    }
-    else alert(json.message);
+    console.log("register");
+    console.log(ref);
   };
 
   return (
-    <div className="signup-container">
-      <form onSubmit={handleRegister}>
-        <div className="signup-row">
-          <label htmlFor="email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            required
-            className="form-control"
-            id="email"
-            name="email"
-            aria-describedby="emailHelp"
-          />
-          <div id="emailHelp" className="form-text">
-            We'll never share your email with anyone else.
-          </div>
-        </div>
-        <div className="signup-row">
-          <label htmlFor="username" className="form-label">
-            Username
-          </label>
-          <input
-            type="text"
-            required
-            className="form-control"
-            id="username"
-            name="username"
-          />
-        </div>
-        <div className="signup-row">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            minLength={5}
-            required
-            className="form-control"
-            id="password"
-            name="password"
-          />
-        </div>
-        <button type="submit" id="signup" className="btn btn-primary">
-          SignUp
-        </button>
+    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
+      <form
+        ref={ref}
+        onSubmit={handleRegister}
+        className="bg-white p-10 rounded-2xl shadow-xl flex flex-col gap-6 border border-gray-200"
+      >
+        <h2 className="text-3xl font-bold text-center text-gray-800">
+          Create an Account
+        </h2>
+        <p className="text-sm text-gray-500 text-center">
+          Join to start organizing your tasks effortlessly
+        </p>
+
+        <Input
+          label="Email"
+          type="email"
+          required
+          placeholder="Enter your email"
+        />
+        <p className="text-xs text-gray-400 -mt-4">We'll never share your email with anyone else.</p>
+
+        <Input
+          label="Username"
+          type="text"
+          required
+          placeholder="Choose a username"
+        />
+
+        <Input
+          label="Password"
+          type="password"
+          required
+          minLength={5}
+          placeholder="Create a password"
+        />
+
+        <Button title="Sign Up" isbgThemeLight />
+
+        <p className="text-xs text-gray-500 text-center">
+          <span className="mr-1">Already have an account?</span>
+          <Link
+            className="text-[#282c34] font-medium p-1 rounded-md hover:underline hover:text-[#ffd900] hover:bg-[#282c34]"
+            to="/login"
+          >
+            Log In
+          </Link>
+        </p>
       </form>
     </div>
   );
