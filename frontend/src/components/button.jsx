@@ -1,4 +1,4 @@
-const Button = ({ title, onClick = () => {}, isbgThemeLight=false }) => {
+const Button = ({ title, isbgThemeLight=false, ...props }) => {
 
   const baseClasses =
     "px-4 py-2 rounded-md transition font-medium";
@@ -11,7 +11,7 @@ const Button = ({ title, onClick = () => {}, isbgThemeLight=false }) => {
 
   return (
     <button
-      onClick={onClick}
+      onClick={props.onClick}
       className={`${baseClasses} ${isbgThemeLight ?  lightClasses : darkClasses}`}
     >
       {title}

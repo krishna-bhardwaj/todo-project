@@ -1,18 +1,26 @@
 import { useRef } from "react";
+import { useDispatch } from 'react-redux';
 import { Button, Input } from "../../components";
-import {Link} from "react-router-dom";
-import authApi from "../../services/auth";
+import { Link } from "react-router-dom";
+import { authApi } from "../../services";
+import {APP_ROUTE} from "../../constants";
+import { authActions } from "../../reducers";
 
 const LogIn = () => {
   const ref = useRef();
-
   const [login] = authApi.useLoginMutation();
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(ref.current);
-    const credentials = Object.fromEntries(formData.entries());
-    login(credentials);
+    const {rememeberMe, ...credential} = Object.fromEntries(formData.entries());
+    login({ ...credential}).unwrap().then(res=>{
+      const {token, user} = res;
+      dispatch(authActions.saveUser(user));
+      if(rememeberMe) localStorage.setItem('token',token);
+      else sessionStorage.setItem('token',token);
+    });
   };
 
   return (
@@ -20,7 +28,7 @@ const LogIn = () => {
       <form
         ref={ref}
         onSubmit={handleSubmit}
-        className="bg-white p-10 rounded-2xl shadow-xl flex flex-col gap-6 border border-gray-200"
+        className="bg-white p-10 rounded-2xl shadow-xl flex flex-col gap-6 border border-gray-200 w-full max-w-md"
       >
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Welcome Back
@@ -28,12 +36,12 @@ const LogIn = () => {
         <p className="text-sm text-gray-500 text-center">
           Log in to manage your tasks efficiently
         </p>
+
         <Input  
           label="Username"
           name="username"
           required
           placeholder="Enter your username"
-        
         />
         <Input 
           label="Password"
@@ -44,11 +52,18 @@ const LogIn = () => {
           placeholder="Enter your password"
         />
 
+        <div className="flex items-center gap-2 text-sm text-gray-700">
+          <Input type="checkbox" name="rememeberMe" className="w-4 h-4 rounded focus:ring-0" defaultChecked={true}/>
+          <label htmlFor="remember" className="select-none">
+            Remember me
+          </label>
+        </div>
+
         <Button title="Log In" isbgThemeLight />
 
         <p className="text-xs text-gray-500 text-center">
           <span className="mr-1">Don’t have an account?</span>
-          <Link className="text-[#282c34] font-medium p-1 rounded-md hover:underline hover:text-[#ffd900] hover:bg-[#282c34]" to="/signup">
+          <Link className="text-[#282c34] font-medium p-1 rounded-md hover:underline hover:text-[#ffd900] hover:bg-[#282c34]" to={APP_ROUTE.SIGN_UP}>
             Sign Up
           </Link>
         </p>
