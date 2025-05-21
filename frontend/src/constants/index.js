@@ -1,0 +1,1 @@
+export {default as APP_ROUTE} from "./routes";

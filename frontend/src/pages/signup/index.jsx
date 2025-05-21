@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { Button, Input } from "../../components";
 import { Link } from "react-router-dom";
-import authApi from "../../services/auth";
+import { authApi } from "../../services";
+import {APP_ROUTE} from "../../constants";
 
 const SignUp = () => {
   const ref = useRef();
@@ -61,7 +62,7 @@ const SignUp = () => {
           <span className="mr-1">Already have an account?</span>
           <Link
             className="text-[#282c34] font-medium p-1 rounded-md hover:underline hover:text-[#ffd900] hover:bg-[#282c34]"
-            to="/login"
+            to={APP_ROUTE.LOG_IN}
           >
             Log In
           </Link>
