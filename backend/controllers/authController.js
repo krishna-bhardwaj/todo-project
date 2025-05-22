@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 
 //SIGN UP
-exports.signup = async (req, res, next) => {
+exports.signup = async (req, res) => {
     try {
         const { email, username, password } = req.body;
         const hashedPassword = bcrypt.hashSync(password);
@@ -21,7 +21,7 @@ exports.signup = async (req, res, next) => {
 };
 
 //SIGN IN
-exports.login = async (req, res, next) => {
+exports.login = async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.username, req.body.password);
         const token = await user.generateAuthToken();
@@ -30,3 +30,16 @@ exports.login = async (req, res, next) => {
         res.status(err.statusCode || 500).json({ message: err.message });
     }
 };
+
+exports.verify = async(req, res) => {
+    try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if(!token) {
+            res.status(400).json({message:"You must login first to start adding task"});
+        }
+        const user = await User.findByToken(token);
+        res.send({user});
+    } catch (err) {
+        res.status(err.statusCode || 500).json({message: err.message});
+    }
+}

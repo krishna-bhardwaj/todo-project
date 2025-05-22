@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import { Button } from "../../components";
+import { APP_ROUTE } from "../../constants";
 
 const HomePage = () => {
   return (
@@ -9,7 +11,9 @@ const HomePage = () => {
       <p className="text-lg text-gray-600 max-w-3xl mb-6">
         Plan, prioritize, and stay productive with our intuitive task manager. Simplify your work and personal life in one place.
       </p>
-      <Button title={"Add Your First Task"} isbgThemeLight />
+      <Link to={APP_ROUTE.TODO}>
+        <Button title={"Add Your First Task"} isbgThemeLight />
+      </Link>
     </div>
   );
 };
