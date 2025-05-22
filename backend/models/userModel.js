@@ -50,7 +50,7 @@ userSchema.statics.findByCredentials = async (username, password) => {
     const user = await User.findOne({ username });
 
     const error = new Error("Invalid login credentials");
-        error.statusCode = 401;
+    error.statusCode = 401;
     
     if (!user) {
         throw error;
