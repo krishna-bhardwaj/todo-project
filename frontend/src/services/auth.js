@@ -25,7 +25,8 @@ const authApi = createApi({
             query: () => ({
                 url:'verify',
                 methode: 'GET'
-            })
+            }),
+            transformErrorResponse:baseErrorHandler,
         })
     })
 });
