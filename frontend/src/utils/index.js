@@ -1,1 +1,1 @@
-export {default as baseQuery} from "./baseQuery"; 
+export {default as baseQuery, baseErrorHandler} from "./baseQuery"; 
