@@ -1,27 +1,40 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import { Button, Input } from "../../components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../../services";
 import {APP_ROUTE} from "../../constants";
 import { authActions } from "../../reducers";
 
 const LogIn = () => {
   const ref = useRef();
-  const [login] = authApi.useLoginMutation();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [login, { data }] = authApi.useLoginMutation();
+  
+
+  const getFormData = () => {
+    const formData = new FormData(ref.current);
+    return Object.fromEntries(formData.entries());
+  } 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = new FormData(ref.current);
-    const {rememeberMe, ...credential} = Object.fromEntries(formData.entries());
-    login({ ...credential}).unwrap().then(res=>{
-      const {token, user} = res;
+    const {rememeberMe, ...credential} = getFormData();
+    login({ ...credential});
+  };
+
+  useEffect(()=>{
+    if(data) {
+      const {token, user} = data;
       dispatch(authActions.saveUser(user));
+      const {rememeberMe} = getFormData();
       if(rememeberMe) localStorage.setItem('token',token);
       else sessionStorage.setItem('token',token);
-    });
-  };
+      navigate(APP_ROUTE.TODO);
+    }
+  },[data]);
 
   return (
     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">

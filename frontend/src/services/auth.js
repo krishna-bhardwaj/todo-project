@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import {baseQuery} from "../utils";
+import {baseQuery, baseErrorHandler} from "../utils";
 
 const authApi = createApi({
     reducerPath: "authApi",
@@ -11,13 +11,15 @@ const authApi = createApi({
                 method: 'POST',
                 body: credentials,
             }),
+            transformErrorResponse: baseErrorHandler,
         }),
         signup: builder.mutation({
             query: (credentials) => ({
                 url: 'signup',
                 method: 'POST',
                 body: credentials
-            })
+            }),
+            transformErrorResponse: baseErrorHandler,
         })
     })
 });
