@@ -48,10 +48,11 @@ userSchema.methods.toJSON = function () {
 
 userSchema.statics.findByCredentials = async (username, password) => {
     const user = await User.findOne({ username });
+
+    const error = new Error("Invalid login credentials");
+        error.statusCode = 401;
     
     if (!user) {
-        const error = new Error("Invalid login credentials");
-        error.statusCode = 401;
         throw error;
     }
 
@@ -64,10 +65,10 @@ userSchema.statics.findByCredentials = async (username, password) => {
 userSchema.statics.findByToken = async (token) => {
     const decodedId = jwt.verify(token,JWT_KEY);
     const user = await User.findOne({ _id: decodedId, 'tokens.token': token });
-
+    
     if (!user) {
         const error = new Error("Session Expired");
-        error.statusCode =401;
+        error.statusCode = 401;
         return error;
     }
     return user;

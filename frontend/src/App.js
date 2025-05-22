@@ -11,13 +11,13 @@ const PageLoader = () => {
 }
 
 const App = () => {
-    const [verify] = authApi.useLazyVerifyQuery();
+    const [verify,{isFetching, isUninitialized}] = authApi.useLazyVerifyQuery();
 
     useEffect(() => {
       verify();
     },[]);
 
-    return <PageLoader />
+    if(isFetching || isUninitialized) return <PageLoader />
 
     return <div className="flex flex-col h-full font-mono">
       <Navbar />
