@@ -20,6 +20,12 @@ const authApi = createApi({
                 body: credentials
             }),
             transformErrorResponse: baseErrorHandler,
+        }),
+        verify: builder.query({
+            query: () => ({
+                url:'verify',
+                methode: 'GET'
+            })
         })
     })
 });

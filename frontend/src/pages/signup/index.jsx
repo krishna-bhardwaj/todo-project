@@ -7,7 +7,7 @@ import {APP_ROUTE} from "../../constants";
 const SignUp = () => {
   const ref = useRef();
 
-  const [signup] = authApi.useSignupMutation();
+  const [signup,{isSuccess}] = authApi.useSignupMutation();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -16,8 +16,28 @@ const SignUp = () => {
     signup(credentials);
   };
 
+  if (isSuccess) {
+    return (
+      <div className="h-full w-full flex flex-col items-center justify-center  bg-gray-100 text-center px-6">
+        <h2 className="text-3xl font-bold text-center text-[#282c34] mb-4">
+          Registration Successful!
+        </h2>
+        <p className="text-lg text-gray-600 max-w-3xl mb-6">
+          🎉 Your account has been created successfully. Welcome aboard! 
+          You can now log in and start managing your tasks efficiently.
+        </p>
+        <Link
+          to={APP_ROUTE.LOG_IN}
+        >
+          <Button title="Proceed to Log In" isbgThemeLight/>
+        </Link>
+      </div>
+    );
+  }
+
+
   return (
-    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
+    <div className="h-full w-full flex items-center justify-center bg-gray-100">
       <form
         ref={ref}
         onSubmit={handleRegister}

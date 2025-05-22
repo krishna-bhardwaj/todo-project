@@ -48,17 +48,30 @@ userSchema.methods.toJSON = function () {
 
 userSchema.statics.findByCredentials = async (username, password) => {
     const user = await User.findOne({ username });
-
-    const error = new Error("Invalid login credentials");
-    error.statusCode = 401;
-
-    if (!user) throw error;
+    
+    if (!user) {
+        const error = new Error("Invalid login credentials");
+        error.statusCode = 401;
+        throw error;
+    }
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect) throw error;
 
     return user;
 };
+
+userSchema.statics.findByToken = async (token) => {
+    const decodedId = jwt.verify(token,JWT_KEY);
+    const user = await User.findOne({ _id: decodedId, 'tokens.token': token });
+
+    if (!user) {
+        const error = new Error("Session Expired");
+        error.statusCode =401;
+        return error;
+    }
+    return user;
+}
 
 
 const User = mongoose.model('User', userSchema);
