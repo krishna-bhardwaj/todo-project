@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import {baseQuery, baseErrorHandler} from "../utils";
+import { authActions } from '../reducers';
 
 const authApi = createApi({
     reducerPath: "authApi",
@@ -27,6 +28,11 @@ const authApi = createApi({
                 methode: 'GET'
             }),
             transformErrorResponse:baseErrorHandler,
+            onQueryStarted: (_,{ dispatch, queryFulfilled }) => {
+                queryFulfilled.then(({data})=>{
+                    dispatch(authActions.saveUser(data.user))
+                })
+            }
         })
     })
 });
