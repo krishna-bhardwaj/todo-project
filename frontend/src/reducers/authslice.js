@@ -4,6 +4,7 @@ const initialState = {
   email: null,
   username: null,
   isAuthenticated: false,
+  loginFailCount: 0,
 };
 
 const authSlice = createSlice({
@@ -16,11 +17,14 @@ const authSlice = createSlice({
       state.username = username;
       state.isAuthenticated = true;
     },
-    logout: (state) => {
+    logOut: (state) => {
       state.email = null;
       state.username = null;
       state.isAuthenticated = false;
     },
+    incrementLoginFailCount: (state) => {
+      state.loginFailCount = state.loginFailCount+1;
+    }
   },
 });
 

@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import {baseQuery, baseErrorHandler} from "../utils";
+import {baseQuery, baseErrorHandler, setToken, deleteToken} from "../utils";
 import { authActions } from '../reducers';
 
 const authApi = createApi({
@@ -7,12 +7,20 @@ const authApi = createApi({
     baseQuery,
     endpoints:(builder) => ({
         login: builder.mutation({
-            query: (credentials) => ({
+            query: ({credentials}) => ({
                 url: 'login',
                 method: 'POST',
                 body: credentials,
             }),
             transformErrorResponse: baseErrorHandler,
+            onQueryStarted: ({rememberMe},{dispatch,queryFulfilled}) => {
+                queryFulfilled.then(({data}) => {
+                    dispatch(authActions.saveUser({...data.user}));
+                    setToken(rememberMe,data.token);
+                }).catch(()=>{
+                    dispatch(authActions.incrementLoginFailCount());
+                });
+            }
         }),
         signup: builder.mutation({
             query: (credentials) => ({
@@ -27,10 +35,11 @@ const authApi = createApi({
                 url:'verify',
                 methode: 'GET'
             }),
-            transformErrorResponse:baseErrorHandler,
             onQueryStarted: (_,{ dispatch, queryFulfilled }) => {
                 queryFulfilled.then(({data})=>{
-                    dispatch(authActions.saveUser(data.user))
+                    dispatch(authActions.saveUser(data.user));
+                }).catch(()=>{
+                    deleteToken();
                 })
             }
         })

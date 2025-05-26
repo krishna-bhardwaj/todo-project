@@ -1,17 +1,12 @@
-import { useEffect, useRef } from "react";
-import { useDispatch } from 'react-redux';
+import { useRef } from "react";
 import { Button, Input } from "../../components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { authApi } from "../../services";
 import {APP_ROUTE} from "../../constants";
-import { authActions } from "../../reducers";
 
 const LogIn = () => {
   const ref = useRef();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const [login, { data }] = authApi.useLoginMutation();
+  const [login] = authApi.useLoginMutation();
   
 
   const getFormData = () => {
@@ -21,20 +16,9 @@ const LogIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const {rememeberMe, ...credential} = getFormData();
-    login({ ...credential});
+    const {rememberMe, ...credentials} = getFormData();
+    login({ rememberMe,credentials});
   };
-
-  useEffect(()=>{
-    if(data) {
-      const {token, user} = data;
-      dispatch(authActions.saveUser(user));
-      const {rememeberMe} = getFormData();
-      if(rememeberMe) localStorage.setItem('token',token);
-      else sessionStorage.setItem('token',token);
-      navigate(APP_ROUTE.TODO);
-    }
-  },[data]);
 
   return (
     <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
