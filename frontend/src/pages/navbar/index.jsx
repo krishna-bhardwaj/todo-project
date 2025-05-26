@@ -1,19 +1,14 @@
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button } from "../../components";
 import {APP_ROUTE} from "../../constants";
-import { authActions } from "../../reducers";
+import authApi from "../../services/auth";
 
 const Navbar = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const dispatch = useDispatch();
+  const [logout] = authApi.useLogoutMutation();
 
-  const handleLogout = () => {
-    dispatch(authActions.logOut());
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
-  }
 
   return (
     <nav className="bg-[#282c34] px-10 py-5 flex justify-between items-center text-[#ffd900]">
@@ -27,7 +22,7 @@ const Navbar = () => {
         {
           isAuthenticated ?
             <Link to={APP_ROUTE.HOME}>
-              <Button title="Log Out" onClick={handleLogout}/>
+              <Button title="Log Out" onClick={logout}/>
             </Link>
           : <>
             <Link
