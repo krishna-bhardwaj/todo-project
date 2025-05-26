@@ -13,7 +13,7 @@ const baseQuery = fetchBaseQuery({
 
 export const baseErrorHandler = (error) => {
     alert(error.data.message || "Something went wrong");
-    return error;
-  };
+    return error.data;
+};
 
 export default baseQuery;
