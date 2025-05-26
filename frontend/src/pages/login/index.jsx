@@ -4,10 +4,11 @@ import { authApi } from "../../services";
 import {APP_ROUTE} from "../../constants";
 import { useSelector } from "react-redux";
 import AlreadyLoggedInNotice from "../alreadyLoggedIn";
+import LoginSuccess from "./loginSuccess";
 
 const LogIn = () => {
   const ref = useRef();
-  const [login] = authApi.useLoginMutation();
+  const [login, {isSuccess}] = authApi.useLoginMutation();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -22,6 +23,7 @@ const LogIn = () => {
     login({ rememberMe,credentials});
   };
 
+  if(isSuccess) return <LoginSuccess />
   if(isAuthenticated)   return <AlreadyLoggedInNotice />
 
   return (
