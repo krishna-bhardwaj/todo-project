@@ -12,7 +12,7 @@ const HomePage = () => {
         Plan, prioritize, and stay productive with our intuitive task manager. Simplify your work and personal life in one place.
       </p>
       <Link to={APP_ROUTE.TODO}>
-        <Button title={"Add Your First Task"} isbgThemeLight />
+        <Button title="Manage Your Tasks" isbgThemeLight />
       </Link>
     </div>
   );

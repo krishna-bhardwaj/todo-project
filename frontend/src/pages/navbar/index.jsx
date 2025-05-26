@@ -10,7 +10,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(authActions.logout());
+    dispatch(authActions.logOut());
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
   }

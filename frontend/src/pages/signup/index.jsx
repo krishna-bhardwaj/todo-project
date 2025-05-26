@@ -1,12 +1,15 @@
 import { useRef } from "react";
-import { Button, Input } from "../../components";
-import { Link } from "react-router-dom";
+import { Button, Input, NavigationLink } from "../../components";
 import { authApi } from "../../services";
 import {APP_ROUTE} from "../../constants";
 import SignUpSucces from "./signupSuccess";
+import { useSelector } from "react-redux";
+import AlreadyLoggedInNotice from "../alreadyLoggedIn";
 
 const SignUp = () => {
   const ref = useRef();
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [signup,{isSuccess}] = authApi.useSignupMutation();
 
@@ -18,6 +21,8 @@ const SignUp = () => {
   };
 
   if (isSuccess) return <SignUpSucces />
+
+  if(isAuthenticated) return <AlreadyLoggedInNotice />
 
 
   return (
@@ -63,13 +68,8 @@ const SignUp = () => {
         <Button title="Sign Up" isbgThemeLight />
 
         <p className="text-xs text-gray-500 text-center">
-          <span className="mr-1">Already have an account?</span>
-          <Link
-            className="text-[#282c34] font-medium p-1 rounded-md hover:underline hover:text-[#ffd900] hover:bg-[#282c34]"
-            to={APP_ROUTE.LOG_IN}
-          >
-            Log In
-          </Link>
+          <span >Already have an account?</span>
+          <NavigationLink title="Log In" path={APP_ROUTE.LOG_IN} />
         </p>
       </form>
     </div>
