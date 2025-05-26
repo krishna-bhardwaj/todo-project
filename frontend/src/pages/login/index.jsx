@@ -3,11 +3,16 @@ import { Button, Input } from "../../components";
 import { Link } from "react-router-dom";
 import { authApi } from "../../services";
 import {APP_ROUTE} from "../../constants";
+import { useSelector } from "react-redux";
+import AlreadyLoggedInNotice from "./alreadyLoggedIn";
 
 const LogIn = () => {
   const ref = useRef();
   const [login] = authApi.useLoginMutation();
-  
+
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  if(isAuthenticated)   return <AlreadyLoggedInNotice />
 
   const getFormData = () => {
     const formData = new FormData(ref.current);
