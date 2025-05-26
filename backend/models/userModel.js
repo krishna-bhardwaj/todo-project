@@ -46,6 +46,14 @@ userSchema.methods.toJSON = function () {
     return userObject;
 };
 
+userSchema.methods.deletetoken = async function(token) {
+    const user = this;
+
+    user.tokens = user.tokens.filter((t) => t.token !== token);
+    
+    await user.save();
+}
+
 userSchema.statics.findByCredentials = async (username, password) => {
     const user = await User.findOne({ username });
 
@@ -67,7 +75,7 @@ userSchema.statics.findByToken = async (token) => {
     const user = await User.findOne({ _id: decodedId, 'tokens.token': token });
     
     if (!user) {
-        const error = new Error("Session Expired");
+        const error = new Error("Token Expired");
         error.statusCode = 401;
         return error;
     }
