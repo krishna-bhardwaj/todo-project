@@ -1,18 +1,15 @@
 import { useRef } from "react";
-import { Button, Input } from "../../components";
-import { Link } from "react-router-dom";
+import { Button, Input, NavigationLink } from "../../components";
 import { authApi } from "../../services";
 import {APP_ROUTE} from "../../constants";
 import { useSelector } from "react-redux";
-import AlreadyLoggedInNotice from "./alreadyLoggedIn";
+import AlreadyLoggedInNotice from "../alreadyLoggedIn";
 
 const LogIn = () => {
   const ref = useRef();
   const [login] = authApi.useLoginMutation();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  if(isAuthenticated)   return <AlreadyLoggedInNotice />
 
   const getFormData = () => {
     const formData = new FormData(ref.current);
@@ -25,12 +22,14 @@ const LogIn = () => {
     login({ rememberMe,credentials});
   };
 
+  if(isAuthenticated)   return <AlreadyLoggedInNotice />
+
   return (
-    <div className="h-full w-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
+    <div className="h-full w-full flex items-center justify-center bg-gray-100">
       <form
         ref={ref}
         onSubmit={handleSubmit}
-        className="bg-white p-10 rounded-2xl shadow-xl flex flex-col gap-6 border border-gray-200 w-full max-w-md"
+        className="bg-white p-10 rounded-2xl shadow-xl flex flex-col gap-6 border border-gray-200"
       >
         <h2 className="text-3xl font-bold text-center text-gray-800">
           Welcome Back
@@ -64,10 +63,8 @@ const LogIn = () => {
         <Button title="Log In" isbgThemeLight />
 
         <p className="text-xs text-gray-500 text-center">
-          <span className="mr-1">Don’t have an account?</span>
-          <Link className="text-[#282c34] font-medium p-1 rounded-md hover:underline hover:text-[#ffd900] hover:bg-[#282c34]" to={APP_ROUTE.SIGN_UP}>
-            Sign Up
-          </Link>
+          <span>Don’t have an account?</span>
+          <NavigationLink title="Sign Up" path={APP_ROUTE.SIGN_UP}/>
         </p>
       </form>
     </div>
