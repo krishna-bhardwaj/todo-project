@@ -46,7 +46,7 @@ userSchema.methods.toJSON = function () {
     return userObject;
 };
 
-userSchema.methods.deletetoken = async function(token) {
+userSchema.methods.deleteToken = async function(token) {
     const user = this;
 
     user.tokens = user.tokens.filter((t) => t.token !== token);

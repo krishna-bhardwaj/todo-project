@@ -4,14 +4,13 @@ import { Button, NavigationLink } from "../../components";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../reducers";
 import { CheckCircle } from "lucide-react"; 
+import authApi from "../../services/auth";
 
 const AlreadyLoggedInNotice = () => {
 
   const dispatch = useDispatch();
 
-  const handleLogOut = () => {
-    dispatch(authActions.logOut());
-  }
+  const [logout] = authApi.useLogoutMutation();
 
   return (
     <div className="h-full w-full flex items-center justify-center bg-gray-100">
@@ -34,7 +33,7 @@ const AlreadyLoggedInNotice = () => {
 
         <p className="text-xs text-gray-400">
           If this isn't you, you can 
-          <NavigationLink title="Log Out" onClick={handleLogOut}/>
+          <NavigationLink title="Log Out" onClick={logout}/>
           and sign in with another account.
         </p>
       </div>

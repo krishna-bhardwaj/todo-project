@@ -33,13 +33,27 @@ const authApi = createApi({
         verify: builder.query({
             query: () => ({
                 url:'verify',
-                methode: 'GET'
+                method: 'GET'
             }),
             onQueryStarted: (_,{ dispatch, queryFulfilled }) => {
                 queryFulfilled.then(({data})=>{
                     dispatch(authActions.saveUser(data.user));
                 }).catch(()=>{
                     deleteToken();
+                })
+            }
+        }),
+        logout: builder.mutation({
+            query: () => ({
+                url: 'logout',
+                method: 'POST',
+            }),
+            onQueryStarted: (_,{dispatch,queryFulfilled}) => {
+                queryFulfilled.then(()=>{
+                    dispatch(authActions.logOut());
+                    deleteToken();
+                }).catch(()=>{
+                    alert("log out unsuccessfull");
                 })
             }
         })
