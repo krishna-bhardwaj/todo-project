@@ -13,7 +13,7 @@ const LoginSuccess = () => {
       <p className="text-lg text-gray-600 max-w-3xl mb-6">
         🚀 Welcome back! You're successfully logged in. Head over to your dashboard to start adding and managing your tasks with ease.
       </p>
-      <Link to={APP_ROUTE.TODO}>
+      <Link to={APP_ROUTE.TASKS}>
         <Button title="Manage Your Tasks" isbgThemeLight />
       </Link>
     </div>
