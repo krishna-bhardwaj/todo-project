@@ -13,7 +13,7 @@ const HomePage = () => {
       <p className="text-lg text-gray-600 max-w-3xl mb-6">
         Plan, prioritize, and stay productive with our intuitive task manager. Simplify your work and personal life in one place.
       </p>
-      <Link to={APP_ROUTE.TODO}>
+      <Link to={APP_ROUTE.TASKS}>
         <Button title="Manage Your Tasks" isbgThemeLight />
       </Link>
     </div>

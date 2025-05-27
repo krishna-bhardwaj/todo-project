@@ -5,8 +5,11 @@ import {APP_ROUTE} from "../../constants";
 import { useSelector } from "react-redux";
 import AlreadyLoggedInNotice from "../alreadyLoggedIn";
 import LoginSuccess from "./loginSuccess";
+import { usePageTitle } from "../../hooks";
 
 const LogIn = () => {
+  usePageTitle("Log In | Task Manager");
+  
   const ref = useRef();
   const [login, {isSuccess}] = authApi.useLoginMutation();
 

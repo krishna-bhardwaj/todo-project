@@ -5,8 +5,11 @@ import {APP_ROUTE} from "../../constants";
 import SignUpSucces from "./signupSuccess";
 import { useSelector } from "react-redux";
 import AlreadyLoggedInNotice from "../alreadyLoggedIn";
+import { usePageTitle } from "../../hooks";
 
 const SignUp = () => {
+  usePageTitle("Log In | Task Manager");
+  
   const ref = useRef();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

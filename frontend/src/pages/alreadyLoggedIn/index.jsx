@@ -26,7 +26,7 @@ const AlreadyLoggedInNotice = () => {
         </p>
 
         <Link
-          to={APP_ROUTE.TODO}
+          to={APP_ROUTE.TASKS}
         >
           <Button title="Manage Your Tasks" isbgThemeLight />
         </Link>
