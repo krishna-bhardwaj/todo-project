@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import {baseQuery, baseErrorHandler, setToken, deleteToken} from "../utils";
+import {baseQuery, baseErrorHandler} from "../utils";
 import { authActions } from '../reducers';
 
 const authApi = createApi({
@@ -16,7 +16,6 @@ const authApi = createApi({
             onQueryStarted: ({rememberMe},{dispatch,queryFulfilled}) => {
                 queryFulfilled.then(({data}) => {
                     dispatch(authActions.saveUser({...data.user}));
-                    setToken(rememberMe,data.token);
                 }).catch(()=>{
                     dispatch(authActions.incrementLoginFailCount());
                 });
@@ -38,8 +37,8 @@ const authApi = createApi({
             onQueryStarted: (_,{ dispatch, queryFulfilled }) => {
                 queryFulfilled.then(({data})=>{
                     dispatch(authActions.saveUser(data.user));
-                }).catch(()=>{
-                    deleteToken();
+                }).catch((err)=>{
+                    alert(err.data.message);
                 })
             }
         }),
@@ -51,7 +50,6 @@ const authApi = createApi({
             onQueryStarted: (_,{dispatch,queryFulfilled}) => {
                 queryFulfilled.then(()=>{
                     dispatch(authActions.logOut());
-                    deleteToken();
                 }).catch(()=>{
                     alert("log out unsuccessfull");
                 })
