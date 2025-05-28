@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { Check } from 'lucide-react';
 import { Play, Pause, StopCircle, History, Trash2, Plus } from "lucide-react";
-import { Button } from "../../components";
+import { Button, Input } from "../../components";
 
 const TaskManager = () => {
   const [tasks, setTasks] = useState([]);
@@ -38,23 +39,21 @@ const TaskManager = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold text-[#282c34] mb-6 text-center">
-        Task Manager
-      </h1>
-
-      <div className="flex gap-3 mb-8">
+    <div className="flex flex-col gap-5 py-5 h-full w-full items-center">
+      <div className="w-full justify-center flex gap-5">
         <input
-          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-          placeholder="Enter a task..."
-          value={newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleAddTask()}
+          className="rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 outline-none border-none placeholder-gray-400 bg-white w-1/3"
+          placeholder="Add your task here..."
         />
-        <Button icon={<Plus size={18} />} title="Add Task" onClick={handleAddTask} />
+        <button  
+  className="rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-shadow duration-200 border-none h-full px-4 text-gray-700"
+>
+  <Check strokeWidth={3} className="w-5 h-5" />
+</button>
       </div>
+      
 
-      <div className="space-y-4">
+      {/* <div className="space-y-4">
         {tasks.map((task) => (
           <div
             key={task.id}
@@ -101,7 +100,7 @@ const TaskManager = () => {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
