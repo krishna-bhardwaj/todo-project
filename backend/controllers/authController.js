@@ -22,7 +22,15 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.username, req.body.password);
         const token = await user.generateAuthToken();
-        return res.send({user,token});
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'Strict',
+            maxAge: 24 * 60 * 60 * 1000, 
+        });
+        
+        return res.status(200).json({ user }); 
+
     } catch (err) {
         return res.status(err.statusCode || 500).json({ message: err.message });
     }
@@ -30,10 +38,8 @@ exports.login = async (req, res) => {
 
 exports.verify = async(req, res) => {
     try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
-        if(!token) {
-            return res.status(400).json({message:"No token found"});
-        }
+        const token = req.cookies.token;
+        if (!token) return res.status(401).json({ message: 'Not authenticated' });
         const user = await User.findByToken(token);
         return res.send({user});
     } catch (err) {
@@ -43,10 +49,11 @@ exports.verify = async(req, res) => {
 
 exports.logout = async(req,res) => {
     try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
+        const token = req.cookies.token;
         if(!token) {
             return res.status(400).json({message:"No token found"});
         }
+        res.clearCookie('token');
         const user = await User.findByToken(token);
         await user.deleteToken(token);
         res.status(200).json({message:"Logged out succesfully"});
