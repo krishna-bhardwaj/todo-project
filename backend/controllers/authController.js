@@ -20,13 +20,17 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
     try {
-        const user = await User.findByCredentials(req.body.username, req.body.password);
+        const {username, password, rememberMe} = req.body;
+        const user = await User.findByCredentials(username, password);
         const token = await user.generateAuthToken();
+
+        const maxAge = rememberMe !== "on" ? 5*60*60*1000 : 7*24*60*60*1000;
+
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            maxAge: 24 * 60 * 60 * 1000, 
+            maxAge,
         });
         
         return res.status(200).json({ user }); 
