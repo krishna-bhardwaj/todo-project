@@ -22,8 +22,8 @@ const LogIn = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const {rememberMe, ...credentials} = getFormData();
-    login({ rememberMe,credentials});
+    const formData = getFormData();
+    login(formData);
   };
 
   if(isSuccess) return <LoginSuccess />

@@ -7,13 +7,13 @@ const authApi = createApi({
     baseQuery,
     endpoints:(builder) => ({
         login: builder.mutation({
-            query: ({credentials}) => ({
+            query: (payload) => ({
                 url: 'login',
                 method: 'POST',
-                body: credentials,
+                body: payload,
             }),
             transformErrorResponse: baseErrorHandler,
-            onQueryStarted: ({rememberMe},{dispatch,queryFulfilled}) => {
+            onQueryStarted: (_,{dispatch,queryFulfilled}) => {
                 queryFulfilled.then(({data}) => {
                     dispatch(authActions.saveUser({...data.user}));
                 }).catch(()=>{
@@ -38,7 +38,7 @@ const authApi = createApi({
                 queryFulfilled.then(({data})=>{
                     dispatch(authActions.saveUser(data.user));
                 }).catch((err)=>{
-                    alert(err.data.message);
+                    
                 })
             }
         }),
