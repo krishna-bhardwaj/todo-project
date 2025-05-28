@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
+const {getTokenFromCookies} = require('../utils/auth');
 
 exports.signup = async (req, res) => {
     try {
@@ -42,8 +43,8 @@ exports.login = async (req, res) => {
 
 exports.verify = async(req, res) => {
     try {
-        const token = req.cookies.token;
-        if (!token) return res.status(401).json({ message: 'Not authenticated' });
+        const token = getTokenFromCookies(req,res);
+        if(!token) return;
         const user = await User.findByToken(token);
         return res.send({user});
     } catch (err) {
@@ -53,10 +54,9 @@ exports.verify = async(req, res) => {
 
 exports.logout = async(req,res) => {
     try {
-        const token = req.cookies.token;
-        if(!token) {
-            return res.status(400).json({message:"No token found"});
-        }
+        const token = getTokenFromCookies(req,res);
+        if(!token) return;
+        
         res.clearCookie('token');
         const user = await User.findByToken(token);
         await user.deleteToken(token);
