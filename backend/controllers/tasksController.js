@@ -13,7 +13,6 @@ const Task = require("../models/taksModel");
 //   }
 // };
 
-//GET TASKS
 exports.getTasks = async (req, res, next) => {
   try {
     if (!req.user || !req.user._id) {
