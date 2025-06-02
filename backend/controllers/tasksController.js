@@ -1,23 +1,49 @@
+const { TASK_ACTIONS } = require("../constants");
 const Task = require("../models/taksModel");
+const TaskAction = require("../models/actionModel");
+const mongoose = require("mongoose");
 
-//CREATE TASK
-// exports.createTask = async (req, res, next) => {
-//   try {
-//     const { title, user } = req.body;
-//     const list = new List({ todoTitle: title, user });
-//     await list.save().then(() => res.status(200).json({ list }));
-//     next();
-//   } catch (error) {
-//     console.log(error);
-//     next();
-//   }
-// };
+exports.addTask = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const userId = req.user._id;
+    const { title } = req.body;
+
+    const newTask = new Task({
+      userId,
+      title,
+      duration: 0,
+      lastAction: {
+        name: TASK_ACTIONS.CREATE,
+        timeStamp: new Date(),
+      },
+    });
+
+    const savedTask = await newTask.save({ session });
+
+    const newAction = new TaskAction({
+      taskId: savedTask._id,
+      name: savedTask.lastAction.name,
+      timeStamp: savedTask.lastAction.timeStamp,
+    });
+
+    await newAction.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(201).json({ task: savedTask });
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    next(err);
+  }
+};
 
 exports.getTasks = async (req, res, next) => {
   try {
-    if (!req.user || !req.user._id) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
     const userId = req.user._id;
     const tasks = await Task.find({ userId });
     res.status(200).json(tasks);

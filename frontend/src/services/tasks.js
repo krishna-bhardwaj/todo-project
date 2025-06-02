@@ -16,7 +16,7 @@ const taskApi = createApi({
       query: (payload) => ({
         url: "addTask",
         method: "POST",
-        payload,
+        body: payload,
       }),
       transformErrorResponse: baseErrorHandler,
     }),
