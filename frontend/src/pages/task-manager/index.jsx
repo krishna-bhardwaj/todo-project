@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check } from 'lucide-react';
+import { Check } from "lucide-react";
 import { Play, Pause, StopCircle, History, Trash2, Plus } from "lucide-react";
 import { Button, Input } from "../../components";
 
@@ -45,13 +45,10 @@ const TaskManager = () => {
           className="rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 outline-none border-none placeholder-gray-400 bg-white w-1/3"
           placeholder="Add your task here..."
         />
-        <button  
-  className="rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-shadow duration-200 border-none h-full px-4 text-gray-700"
->
-  <Check strokeWidth={3} className="w-5 h-5" />
-</button>
+        <button className="rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-shadow duration-200 border-none h-full px-4 text-gray-700">
+          <Check strokeWidth={3} className="w-5 h-5" />
+        </button>
       </div>
-      
 
       {/* <div className="space-y-4">
         {tasks.map((task) => (
