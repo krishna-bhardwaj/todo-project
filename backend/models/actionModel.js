@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { TASK_ACTIONS } = require("../constants");
 
 const actionSchema = new mongoose.Schema({
   taskId: {
@@ -7,6 +8,7 @@ const actionSchema = new mongoose.Schema({
   },
   name: {
     type: String,
+    enum: Object.values(TASK_ACTIONS),
     required: true,
   },
   timeStamp: {

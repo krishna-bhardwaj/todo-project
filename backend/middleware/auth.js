@@ -1,19 +1,21 @@
-const User = require('../models/userModel');
-const {getTokenFromCookies} = require('../utils/auth');
+const User = require("../models/userModel");
+const { getTokenFromCookies } = require("../utils/auth");
 
 const authenticateUser = async (req, res, next) => {
-    try {
-        const token = getTokenFromCookies(req,res);
-        if(!token) return;
+  try {
+    const token = getTokenFromCookies(req, res);
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-        const user = await User.findByToken(token);
-        req.user = user;
+    const user = await User.findByToken(token);
 
-        next();
+    if (!user) return res.status(401).json({ message: "Unauthorized" });
 
-    }catch {
-        res.status(401).json({ message: 'Authentication failed' });
-    }
-}
+    req.user = user;
 
-module.exports = {authenticateUser};
+    next();
+  } catch {
+    res.status(401).json({ message: "Authentication failed" });
+  }
+};
+
+module.exports = { authenticateUser };
