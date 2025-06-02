@@ -1,41 +1,26 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { Play, Pause, StopCircle, History, Trash2, Plus } from "lucide-react";
 import { Button, Input } from "../../components";
+import { taskApi } from "../../services";
+import { isEnterPressed } from "../../utils";
 
 const TaskManager = () => {
-  const [tasks, setTasks] = useState([]);
-  const [newTask, setNewTask] = useState("");
+  const inputRef = useRef();
+
+  const x = taskApi.useGetTaskQuery();
+  const [addTask] = taskApi.useAddTaskMutation();
+
+  console.log(x);
+
+  const handleKeyDown = (e) => {
+    if (!isEnterPressed(e)) return;
+    handleAddTask();
+  };
 
   const handleAddTask = () => {
-    if (!newTask.trim()) return;
-    const task = {
-      id: Date.now(),
-      title: newTask,
-      status: "idle",
-      logs: [],
-    };
-    setTasks([...tasks, task]);
-    setNewTask("");
-  };
-
-  const updateTask = (id, updater) => {
-    setTasks(tasks.map((t) => (t.id === id ? updater(t) : t)));
-  };
-
-  const deleteTask = (id) => {
-    setTasks(tasks.filter((t) => t.id !== id));
-  };
-
-  const handleStatusChange = (task, action) => {
-    const timestamp = new Date().toISOString();
-    updateTask(task.id, (t) => {
-      let logs = [...t.logs];
-      if (action === "pause" || action === "resume") {
-        logs.push({ action, timestamp });
-      }
-      return { ...t, status: action, logs };
-    });
+    if (!inputRef.current.value) return;
+    addTask({ title: inputRef.current.value });
   };
 
   return (
@@ -44,8 +29,13 @@ const TaskManager = () => {
         <input
           className="rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 outline-none border-none placeholder-gray-400 bg-white w-1/3"
           placeholder="Add your task here..."
+          onKeyDown={handleKeyDown}
+          ref={inputRef}
         />
-        <button className="rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-shadow duration-200 border-none h-full px-4 text-gray-700">
+        <button
+          className="rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-shadow duration-200 border-none h-full px-4 text-gray-700"
+          onClick={handleAddTask}
+        >
           <Check strokeWidth={3} className="w-5 h-5" />
         </button>
       </div>
