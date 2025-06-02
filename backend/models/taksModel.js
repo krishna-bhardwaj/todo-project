@@ -30,4 +30,14 @@ const taskSchema = new mongoose.Schema({
   },
 });
 
+taskSchema.methods.toJSON = function () {
+  const task = this.toObject();
+  task.id = task._id;
+  delete task.__v;
+  delete task._id;
+  delete task.userId;
+  delete task.lastAction._id;
+  return task;
+};
+
 module.exports = mongoose.model("Task", taskSchema);
