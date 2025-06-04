@@ -15,6 +15,10 @@ const actionSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  metaData: {
+    type: Object,
+    required: false,
+  },
 });
 
 module.exports = mongoose.model("TaskAction", actionSchema);

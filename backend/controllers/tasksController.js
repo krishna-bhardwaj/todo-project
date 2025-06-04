@@ -23,13 +23,13 @@ exports.addTask = async (req, res, next) => {
 
     const savedTask = await newTask.save({ session });
 
-    const newAction = new TaskAction({
+    const action = new TaskAction({
       taskId: savedTask._id,
-      name: savedTask.lastAction.name,
+      name: TASK_ACTIONS.CREATE,
       timeStamp: savedTask.lastAction.timeStamp,
     });
 
-    await newAction.save({ session });
+    await action.save({ session });
 
     await session.commitTransaction();
     session.endSession();
@@ -52,76 +52,67 @@ exports.getTasks = async (req, res, next) => {
   }
 };
 
-// const checkActive = async (user) => {
-//   let activeTasks = await List.find({ user: user, isActive: 1 });
-//   if (activeTasks.length !== 0) return true;
-//   return false;
-// };
+exports.updateTitle = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-// //UPDATE TASK
-// exports.updateTask = async (req, res) => {
-//   try {
-//     const { action, id, user } = req.body;
-//     const isActiveTask = await checkActive(user);
-//     let task = await List.findById(id);
-//     let update = {};
+  try {
+    const userId = req.user._id;
+    const taskId = req.params.taskId;
+    const { title } = req.body;
 
-//     if (action === "START") {
-//       if (isActiveTask) {
-//         return res
-//           .status(403)
-//           .json({ message: "Only one task can be active at a time." });
-//       }
-//       update = {
-//         isActive: 1,
-//         startTime: Date.now(),
-//         status: 2,
-//         isPaused: false,
-//         isCompleted: false,
-//         pauseStep: [{ type: "start", time: Date.now() }],
-//       };
-//     } else if (action === "PAUSE") {
-//       update = {
-//         isActive: 0,
-//         duration: task.duration + (Date.now() - task.startTime),
-//         isPaused: true,
-//         isCompleted: false,
-//         pauseStep: [...task.pauseStep, { type: "pause", time: Date.now() }],
-//       };
-//     } else if (action === "RESUME") {
-//       if (isActiveTask) {
-//         return res
-//           .status(403)
-//           .json({ message: "Only one task can be active at a time." });
-//       }
-//       update = {
-//         isActive: 1,
-//         startTime: Date.now(),
-//         isPaused: false,
-//         pauseStep: [...task.pauseStep, { type: "resume", time: Date.now() }],
-//       };
-//     } else if (action === "END") {
-//       update = {
-//         isActive: 0,
-//         duration: task.isPaused
-//           ? 0
-//           : task.duration + (Date.now() - task.startTime),
-//         endTime: Date.now(),
-//         status: 3,
-//         isCompleted: true,
-//         pauseStep: [...task.pauseStep, { type: "end", time: Date.now() }],
-//       };
-//     }
+    const task = await Task.findOne({ _id: taskId, userId });
 
-//     const updatedTask = await List.findOneAndUpdate({ _id: id }, update, {
-//       new: true,
-//     });
+    const prevTitle = task.title;
 
-//     return res
-//       .status(200)
-//       .json({ message: "Task updated successfully", data: updatedTask });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(400).json({ message: "Error during update" });
-//   }
-// };
+    task.title = title;
+    task.lastAction = {
+      name: TASK_ACTIONS.EDIT,
+      timeStamp: new Date(),
+    };
+
+    const savedTask = await task.save();
+
+    const action = new TaskAction({
+      taskId: task._id,
+      name: TASK_ACTIONS.EDIT,
+      timeStamp: savedTask.lastAction.timeStamp,
+      metaData: {
+        from: prevTitle,
+        to: title,
+      },
+    });
+
+    await action.save();
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({ message: "Task title updated successfully" });
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    next(err);
+  }
+};
+
+exports.deleteTask = async (req, res, next) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const taskId = req.params.taskId;
+
+    Task.deleteOne({ _id: taskId });
+    TaskAction.deleteMany({ taskId });
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({ message: "Task deleted successFully" });
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    next(err);
+  }
+};
