@@ -1,17 +1,17 @@
 import { useRef, useState } from "react";
 import { Check } from "lucide-react";
 import { Play, Pause, StopCircle, History, Trash2, Plus } from "lucide-react";
-import { Button, Input } from "../../components";
+import { ActionButton, Button, Input } from "../../components";
 import { taskApi } from "../../services";
 import { isEnterPressed } from "../../utils";
+import TaskItem from "./task-item";
 
 const TaskManager = () => {
   const inputRef = useRef();
 
-  const x = taskApi.useGetTaskQuery();
+  const { data: tasks, isFetching: isTaskListLoading } =
+    taskApi.useGetTaskQuery();
   const [addTask] = taskApi.useAddTaskMutation();
-
-  console.log(x);
 
   const handleKeyDown = (e) => {
     if (!isEnterPressed(e)) return;
@@ -24,7 +24,7 @@ const TaskManager = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 py-5 h-full w-full items-center">
+    <div className="flex flex-col gap-8 py-5 h-full w-full items-center">
       <div className="w-full justify-center flex gap-5">
         <input
           className="rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 outline-none border-none placeholder-gray-400 bg-white w-1/3"
@@ -32,12 +32,13 @@ const TaskManager = () => {
           onKeyDown={handleKeyDown}
           ref={inputRef}
         />
-        <button
-          className="rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] transition-shadow duration-200 border-none h-full px-4 text-gray-700"
-          onClick={handleAddTask}
-        >
+        <ActionButton onClick={handleAddTask}>
           <Check strokeWidth={3} className="w-5 h-5" />
-        </button>
+        </ActionButton>
+      </div>
+
+      <div className="w-full flex flex-col gap-5 items-center">
+        {!isTaskListLoading && tasks.map((task) => <TaskItem task={task} />)}
       </div>
 
       {/* <div className="space-y-4">
