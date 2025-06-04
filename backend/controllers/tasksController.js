@@ -103,8 +103,8 @@ exports.deleteTask = async (req, res, next) => {
   try {
     const taskId = req.params.taskId;
 
-    Task.deleteOne({ _id: taskId });
-    TaskAction.deleteMany({ taskId });
+    await Task.deleteOne({ _id: taskId });
+    await TaskAction.deleteMany({ taskId });
 
     await session.commitTransaction();
     session.endSession();

@@ -20,6 +20,21 @@ const taskApi = createApi({
       }),
       transformErrorResponse: baseErrorHandler,
     }),
+    deleteTask: builder.mutation({
+      query: (taskId) => ({
+        url: `deleteTask/${taskId}`,
+        method: "DELETE",
+      }),
+      transformErrorResponse: baseErrorHandler,
+    }),
+    updaateTitle: builder.mutation({
+      query: ({ taskId, title }) => ({
+        url: `updateTitle/${taskId}`,
+        method: "PATCH",
+        body: { title },
+      }),
+      transformErrorResponse: baseErrorHandler,
+    }),
   }),
 });
 
