@@ -2,18 +2,29 @@ import { useRef, useState } from "react";
 import { PenLine, Check, Trash2 } from "lucide-react";
 import { ActionButton } from "../../../components";
 import { isEnterPressed } from "../../../utils";
+import taskApi from "../../../services/tasks";
 
 const TaskItem = ({ task }) => {
   const [isReadOnly, setReadOnly] = useState(true);
 
   const inputRef = useRef();
 
+  const [deleteTask] = taskApi.useDeleteTaskMutation();
+  const [updateTitle] = taskApi.useUpdaateTitleMutation();
+
   const handleEdit = () => {
-    if (task.title === inputRef.current.value || !inputRef.current.value)
+    if (task.title === inputRef.current.value) return;
+    if (!inputRef.current.value) {
+      inputRef.current.value = task.title;
       return;
+    }
+    updateTitle({ title: inputRef.current.value, taskId: task.id });
   };
 
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    if (!task.id) return;
+    deleteTask(task.id);
+  };
 
   const toggleEditMode = () => {
     if (isReadOnly) {
@@ -27,7 +38,7 @@ const TaskItem = ({ task }) => {
 
   const handleKeyDown = (e) => {
     if (!isEnterPressed(e)) return;
-    handleEdit();
+    if (!isReadOnly) toggleEditMode();
   };
 
   return (
