@@ -5,12 +5,13 @@ import { ActionButton, Button, Input } from "../../components";
 import { taskApi } from "../../services";
 import { isEnterPressed } from "../../utils";
 import TaskItem from "./task-item";
+import { AnimatePresence } from "framer-motion";
 
 const TaskManager = () => {
   const inputRef = useRef();
 
-  const { data: tasks, isFetching: isTaskListLoading } =
-    taskApi.useGetTaskQuery();
+  const { data: tasks = [], isLoading: isTaskListLoading } =
+    taskApi.useGetTaskQuery(undefined, { refetchOnMountOrArgChange: true });
   const [addTask] = taskApi.useAddTaskMutation();
 
   const handleKeyDown = (e) => {
@@ -20,7 +21,11 @@ const TaskManager = () => {
 
   const handleAddTask = () => {
     if (!inputRef.current.value) return;
-    addTask({ title: inputRef.current.value });
+    addTask({ title: inputRef.current.value })
+      .unwrap()
+      .then(() => {
+        inputRef.current.value = "";
+      });
   };
 
   return (
@@ -37,11 +42,31 @@ const TaskManager = () => {
         </ActionButton>
       </div>
 
-      <div className="w-full flex flex-col gap-5 items-center overflow-scroll py-5">
-        {!isTaskListLoading && tasks.map((task) => <TaskItem task={task} />)}
+      <div className="w-full flex flex-col items-center overflow-scroll py-5">
+        <AnimatePresence>
+          {tasks.map((task) => (
+            <TaskItem task={task} key={task.id} />
+          ))}
+        </AnimatePresence>
       </div>
+    </div>
+  );
+};
 
-      {/* <div className="space-y-4">
+const IconButton = ({ icon, label, onClick }) => (
+  <button
+    onClick={onClick}
+    title={label}
+    className="p-2 rounded-full hover:bg-gray-100 text-gray-700"
+  >
+    {icon}
+  </button>
+);
+
+export default TaskManager;
+
+{
+  /* <div className="space-y-4">
         {tasks.map((task) => (
           <div
             key={task.id}
@@ -88,19 +113,5 @@ const TaskManager = () => {
             </div>
           </div>
         ))}
-      </div> */}
-    </div>
-  );
-};
-
-const IconButton = ({ icon, label, onClick }) => (
-  <button
-    onClick={onClick}
-    title={label}
-    className="p-2 rounded-full hover:bg-gray-100 text-gray-700"
-  >
-    {icon}
-  </button>
-);
-
-export default TaskManager;
+      </div> */
+}

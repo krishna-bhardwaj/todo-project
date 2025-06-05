@@ -4,6 +4,7 @@ import { baseQuery, baseErrorHandler } from "../utils";
 const taskApi = createApi({
   reducerPath: "taskApi",
   baseQuery,
+  tagTypes: ["tasks"],
   endpoints: (builder) => ({
     getTask: builder.query({
       query: () => ({
@@ -11,6 +12,7 @@ const taskApi = createApi({
         method: "GET",
       }),
       transformErrorResponse: baseErrorHandler,
+      providesTags: ["tasks"],
     }),
     addTask: builder.mutation({
       query: (payload) => ({
@@ -19,6 +21,7 @@ const taskApi = createApi({
         body: payload,
       }),
       transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasks"],
     }),
     deleteTask: builder.mutation({
       query: (taskId) => ({
@@ -26,6 +29,7 @@ const taskApi = createApi({
         method: "DELETE",
       }),
       transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasks"],
     }),
     updaateTitle: builder.mutation({
       query: ({ taskId, title }) => ({
