@@ -3,6 +3,7 @@ import { PenLine, Check, Trash2 } from "lucide-react";
 import { ActionButton } from "../../../components";
 import { isEnterPressed } from "../../../utils";
 import taskApi from "../../../services/tasks";
+import { motion } from "framer-motion";
 
 const TaskItem = ({ task }) => {
   const [isReadOnly, setReadOnly] = useState(true);
@@ -29,7 +30,7 @@ const TaskItem = ({ task }) => {
   const toggleEditMode = () => {
     if (isReadOnly) {
       setReadOnly(false);
-      if (inputRef) inputRef.current.focus();
+      inputRef.current?.focus();
       return;
     }
     setReadOnly(true);
@@ -42,14 +43,26 @@ const TaskItem = ({ task }) => {
   };
 
   return (
-    <div className="w-full justify-center flex gap-5">
-      <input
-        className="rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 outline-none border-none placeholder-gray-400 bg-white w-1/3"
-        defaultValue={task.title}
-        readOnly={isReadOnly}
-        ref={inputRef}
-        onKeyDown={handleKeyDown}
-      />
+    <motion.div
+      className="w-full justify-center flex gap-5 pb-5 pt-1"
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, height: 0, padding: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="flex justify-between rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 w-1/3">
+        <div className="flex flex-col gap-1">
+          <input
+            className="outline-none border-none placeholder-gray-400 bg-white"
+            defaultValue={task.title}
+            readOnly={isReadOnly}
+            ref={inputRef}
+            onKeyDown={handleKeyDown}
+          />
+          <p className="text-xs text-gray-500 capitalize">Status: Pending</p>
+        </div>
+      </div>
+
       <ActionButton onClick={toggleEditMode}>
         {isReadOnly ? (
           <PenLine strokeWidth={2} className="w-5 h-5" />
@@ -60,7 +73,7 @@ const TaskItem = ({ task }) => {
       <ActionButton onClick={handleDelete}>
         <Trash2 strokeWidth={2} />
       </ActionButton>
-    </div>
+    </motion.div>
   );
 };
 
