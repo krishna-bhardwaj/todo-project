@@ -66,17 +66,13 @@ exports.updateTitle = async (req, res, next) => {
     const prevTitle = task.title;
 
     task.title = title;
-    task.lastAction = {
-      name: TASK_ACTIONS.EDIT,
-      timeStamp: new Date(),
-    };
 
     const savedTask = await task.save();
 
     const action = new TaskAction({
       taskId: task._id,
       name: TASK_ACTIONS.EDIT,
-      timeStamp: savedTask.lastAction.timeStamp,
+      timeStamp: new Date(),
       metaData: {
         from: prevTitle,
         to: title,

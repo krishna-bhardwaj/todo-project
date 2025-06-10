@@ -29,7 +29,7 @@ const TaskManager = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 py-5 h-full w-full items-center">
+    <div className="flex flex-col gap-5 py-5 h-full w-full items-center bg-gray-100">
       <div className="w-full justify-center flex gap-5">
         <input
           className="rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 outline-none border-none placeholder-gray-400 bg-white w-1/3"
