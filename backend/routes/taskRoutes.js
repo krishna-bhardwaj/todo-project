@@ -7,7 +7,11 @@ router.use(authenticateUser);
 
 router.get("/getTasks", tasksController.getTasks);
 router.post("/addTask", tasksController.addTask);
-router.delete("/deleteTask/:taskId", tasksController.deleteTask);
-router.patch("/updateTitle/:taskId", tasksController.updateTitle);
+router.delete("/:taskId/deleteTask", tasksController.deleteTask);
+router.patch("/:taskId/updateTitle", tasksController.updateTitle);
+router.patch("/:taskId/startTask", tasksController.startTask);
+router.patch("/:taskId/pauseTask", tasksController.pauseTask);
+router.patch("/:taskId/resumeTask", tasksController.resumeTask);
+router.patch("/:taskId/completeTask", tasksController.completTask);
 
 module.exports = router;

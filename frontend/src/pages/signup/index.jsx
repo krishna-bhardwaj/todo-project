@@ -1,20 +1,20 @@
 import { useRef } from "react";
 import { Button, Input, NavigationLink } from "../../components";
 import { authApi } from "../../services";
-import {APP_ROUTE} from "../../constants";
+import { APP_ROUTE } from "../../constants";
 import SignUpSucces from "./signupSuccess";
 import { useSelector } from "react-redux";
 import AlreadyLoggedInNotice from "../alreadyLoggedIn";
 import { usePageTitle } from "../../hooks";
 
 const SignUp = () => {
-  usePageTitle("Log In | Task Manager");
-  
+  usePageTitle("Sign Up | Task Manager");
+
   const ref = useRef();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const [signup,{isSuccess}] = authApi.useSignupMutation();
+  const [signup, { isSuccess }] = authApi.useSignupMutation();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -23,10 +23,9 @@ const SignUp = () => {
     signup(credentials);
   };
 
-  if (isSuccess) return <SignUpSucces />
+  if (isSuccess) return <SignUpSucces />;
 
-  if(isAuthenticated) return <AlreadyLoggedInNotice />
-
+  if (isAuthenticated) return <AlreadyLoggedInNotice />;
 
   return (
     <div className="h-full w-full flex items-center justify-center bg-gray-100">
@@ -49,7 +48,9 @@ const SignUp = () => {
           required
           placeholder="Enter your email"
         />
-        <p className="text-xs text-gray-400 -mt-4">We'll never share your email with anyone else.</p>
+        <p className="text-xs text-gray-400 -mt-4">
+          We'll never share your email with anyone else.
+        </p>
 
         <Input
           label="Username"
@@ -71,7 +72,7 @@ const SignUp = () => {
         <Button title="Sign Up" isbgThemeLight />
 
         <p className="text-xs text-gray-500 text-center">
-          <span >Already have an account?</span>
+          <span>Already have an account?</span>
           <NavigationLink title="Log In" path={APP_ROUTE.LOG_IN} />
         </p>
       </form>

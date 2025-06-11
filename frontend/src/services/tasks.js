@@ -25,7 +25,7 @@ const taskApi = createApi({
     }),
     deleteTask: builder.mutation({
       query: (taskId) => ({
-        url: `deleteTask/${taskId}`,
+        url: `${taskId}/deleteTask`,
         method: "DELETE",
       }),
       transformErrorResponse: baseErrorHandler,
@@ -33,11 +33,43 @@ const taskApi = createApi({
     }),
     updaateTitle: builder.mutation({
       query: ({ taskId, title }) => ({
-        url: `updateTitle/${taskId}`,
+        url: `${taskId}/updateTitle`,
         method: "PATCH",
         body: { title },
       }),
       transformErrorResponse: baseErrorHandler,
+    }),
+    startTask: builder.mutation({
+      query: (taskId) => ({
+        url: `${taskId}/startTask`,
+        method: "PATCH",
+      }),
+      transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasks"],
+    }),
+    completeTask: builder.mutation({
+      query: (taskId) => ({
+        url: `${taskId}/completeTask`,
+        method: "PATCH",
+      }),
+      transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasks"],
+    }),
+    pauseTask: builder.mutation({
+      query: (taskId) => ({
+        url: `${taskId}/pauseTask`,
+        method: "PATCH",
+      }),
+      transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasks"],
+    }),
+    resumeTask: builder.mutation({
+      query: (taskId) => ({
+        url: `${taskId}/resumeTask`,
+        method: "PATCH",
+      }),
+      transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasks"],
     }),
   }),
 });

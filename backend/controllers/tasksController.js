@@ -52,6 +52,50 @@ exports.getTasks = async (req, res, next) => {
   }
 };
 
+const updateTask = async (req, res, next, action) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    const userId = req.user._id;
+    const taskId = req.params.taskId;
+
+    const task = await Task.findOne({ _id: taskId, userId });
+
+    let durationIncrement = 0;
+
+    if (action == TASK_ACTIONS.PAUSE || TASK_ACTIONS.COMPLETE) {
+      durationIncrement =
+        new Date().getMilliseconds() -
+        task.lastAction.timeStamp.getMilliseconds();
+    }
+
+    task.lastAction = {
+      name: action,
+      timeStamp: new Date(),
+    };
+
+    task.duration = task.duration + durationIncrement;
+
+    const savedTask = await task.save();
+
+    const taskAction = new TaskAction({
+      taskId: task._id,
+      name: action,
+      timeStamp: savedTask.lastAction.timeStamp,
+    });
+
+    await taskAction.save();
+    await session.commitTransaction();
+    session.endSession();
+
+    return res.status(200).json({ message: "Task updated Successfully" });
+  } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+    next(err);
+  }
+};
+
 exports.updateTitle = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -111,4 +155,20 @@ exports.deleteTask = async (req, res, next) => {
     session.endSession();
     next(err);
   }
+};
+
+exports.startTask = async (req, res, next) => {
+  updateTask(req, res, next, TASK_ACTIONS.START);
+};
+
+exports.pauseTask = async (req, res, next) => {
+  updateTask(req, res, next, TASK_ACTIONS.PAUSE);
+};
+
+exports.resumeTask = async (req, res, next) => {
+  updateTask(req, res, next, TASK_ACTIONS.RESUME);
+};
+
+exports.completTask = async (req, res, next) => {
+  updateTask(req, res, next, TASK_ACTIONS.COMPLETE);
 };
