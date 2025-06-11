@@ -1,18 +1,10 @@
 import { useRef, useState } from "react";
-import {
-  PenLine,
-  Check,
-  Trash2,
-  CirclePlay,
-  CircleCheck,
-  CirclePause,
-  History,
-} from "lucide-react";
-import { ActionButton, SecondaryActionButton } from "../../../components";
+import { PenLine, Check, Trash2 } from "lucide-react";
+import { ActionButton } from "../../../components";
 import { getTaskStatus, isEnterPressed } from "../../../utils";
 import taskApi from "../../../services/tasks";
 import { motion } from "framer-motion";
-import { TASK_STATUS } from "../../../constants";
+import TaskActions from "./task-actions";
 
 const TaskItem = ({ task }) => {
   const [isReadOnly, setReadOnly] = useState(true);
@@ -61,7 +53,7 @@ const TaskItem = ({ task }) => {
       exit={{ opacity: 0, height: 0, padding: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex justify-between rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 w-1/3 bg-white">
+      <div className="flex justify-between rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 w-1/3 bg-white min-w-96 ">
         <div className="flex flex-col gap-1">
           <input
             className="outline-none border-none placeholder-gray-400 bg-white"
@@ -72,38 +64,7 @@ const TaskItem = ({ task }) => {
           />
           <p className="text-xs text-gray-500 capitalize">{taskStatus}</p>
         </div>
-        <div className="flex">
-          {taskStatus === TASK_STATUS.NOT_STARTED && (
-            <SecondaryActionButton
-              icon={<CirclePlay size={24} />}
-              label="Start"
-            />
-          )}
-          {taskStatus === TASK_STATUS.PAUSED && (
-            <SecondaryActionButton
-              icon={<CirclePlay size={24} />}
-              label="Resume"
-            />
-          )}
-          {taskStatus === TASK_STATUS.IN_PROGRESS && (
-            <SecondaryActionButton
-              icon={<CirclePause size={24} />}
-              label="Pause"
-            />
-          )}
-          {taskStatus !== TASK_STATUS.NOT_STARTED &&
-            taskStatus !== TASK_STATUS.COMPLETED && (
-              <SecondaryActionButton
-                icon={<CircleCheck size={24} />}
-                label="Mark Complete"
-              />
-            )}
-
-          <SecondaryActionButton
-            icon={<History size={24} />}
-            label="See Task History"
-          />
-        </div>
+        <TaskActions task={task} />
       </div>
 
       <ActionButton onClick={toggleEditMode}>

@@ -1,17 +1,20 @@
-import { useRef, useState } from "react";
-import { Check } from "lucide-react";
-import { Play, Pause, StopCircle, History, Trash2, Plus } from "lucide-react";
-import { ActionButton, Button, Input } from "../../components";
+import { useRef } from "react";
+import { Check, UserLock } from "lucide-react";
+import { ActionButton } from "../../components";
 import { taskApi } from "../../services";
 import { isEnterPressed } from "../../utils";
 import TaskItem from "./task-item";
 import { AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const TaskManager = () => {
   const inputRef = useRef();
 
-  const { data: tasks = [], isLoading: isTaskListLoading } =
-    taskApi.useGetTaskQuery(undefined, { refetchOnMountOrArgChange: true });
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
+  const { data: tasks = [] } = taskApi.useGetTaskQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const [addTask] = taskApi.useAddTaskMutation();
 
   const handleKeyDown = (e) => {
@@ -27,6 +30,14 @@ const TaskManager = () => {
         inputRef.current.value = "";
       });
   };
+
+  if (!isAuthenticated)
+    return (
+      <div className="w-full h-full flex justify-center items-center bg-gray-100 flex-col gap-5">
+        <UserLock size={100} strokeWidth={2} color="#ccc" />
+        <div className="text-2xl text-[#ccc] font-extrabold">Log In First</div>
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-5 py-5 h-full w-full items-center bg-gray-100">
@@ -53,65 +64,4 @@ const TaskManager = () => {
   );
 };
 
-const IconButton = ({ icon, label, onClick }) => (
-  <button
-    onClick={onClick}
-    title={label}
-    className="p-2 rounded-full hover:bg-gray-100 text-gray-700"
-  >
-    {icon}
-  </button>
-);
-
 export default TaskManager;
-
-{
-  /* <div className="space-y-4">
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className="flex justify-between items-center bg-white rounded-xl shadow-md p-4 border border-gray-200"
-          >
-            <div className="flex-1">
-              <p className="text-lg font-medium text-gray-800">{task.title}</p>
-              <p className="text-sm text-gray-500 capitalize">Status: {task.status}</p>
-            </div>
-            <div className="flex gap-2 items-center">
-              {task.status === "idle" || task.status === "pause" ? (
-                <IconButton
-                  onClick={() => handleStatusChange(task, "resume")}
-                  icon={<Play size={18} />}
-                  label="Start/Resume"
-                />
-              ) : null}
-              {task.status === "resume" ? (
-                <IconButton
-                  onClick={() => handleStatusChange(task, "pause")}
-                  icon={<Pause size={18} />}
-                  label="Pause"
-                />
-              ) : null}
-              {task.status !== "completed" ? (
-                <IconButton
-                  onClick={() => handleStatusChange(task, "completed")}
-                  icon={<StopCircle size={18} />}
-                  label="Complete"
-                />
-              ) : null}
-              <IconButton
-                onClick={() => deleteTask(task.id)}
-                icon={<Trash2 size={18} />}
-                label="Delete"
-              />
-              {task.status === "completed" && task.logs.length > 0 && (
-                <IconButton
-                  onClick={() => alert(JSON.stringify(task.logs, null, 2))}
-                  icon={<History size={18} />}
-                  label="Logs"
-                />
-              )}
-            </div>
-          </div>
-        ))}
-      </div> */
-}
