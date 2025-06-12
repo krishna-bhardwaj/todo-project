@@ -6,6 +6,7 @@ import { isEnterPressed } from "../../utils";
 import TaskItem from "./task-item";
 import { AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
+import History from "./history";
 
 const TaskManager = () => {
   const inputRef = useRef();
@@ -15,6 +16,8 @@ const TaskManager = () => {
   const { data: tasks = [] } = taskApi.useGetTaskQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+  const [getHistory, historyState] = taskApi.useLazyGetHistoryQuery();
+
   const [addTask] = taskApi.useAddTaskMutation();
 
   const handleKeyDown = (e) => {
@@ -29,6 +32,10 @@ const TaskManager = () => {
       .then(() => {
         inputRef.current.value = "";
       });
+  };
+
+  const handleGetHistory = (taskId) => {
+    getHistory(taskId);
   };
 
   if (!isAuthenticated)
@@ -56,10 +63,15 @@ const TaskManager = () => {
       <div className="w-full flex flex-col items-center overflow-scroll py-5">
         <AnimatePresence>
           {tasks.map((task) => (
-            <TaskItem task={task} key={task.id} />
+            <TaskItem
+              task={task}
+              key={task.id}
+              handleGetHistory={handleGetHistory}
+            />
           ))}
         </AnimatePresence>
       </div>
+      <History data={historyState.data} isLoading={historyState.isFetching} />
     </div>
   );
 };

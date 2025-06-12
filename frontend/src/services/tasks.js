@@ -71,6 +71,13 @@ const taskApi = createApi({
       transformErrorResponse: baseErrorHandler,
       invalidatesTags: ["tasks"],
     }),
+    getHistory: builder.query({
+      query: (taskId) => ({
+        url: `${taskId}/getHistory`,
+        method: "GET",
+      }),
+      transformErrorResponse: baseErrorHandler,
+    }),
   }),
 });
 
