@@ -13,5 +13,6 @@ router.patch("/:taskId/startTask", tasksController.startTask);
 router.patch("/:taskId/pauseTask", tasksController.pauseTask);
 router.patch("/:taskId/resumeTask", tasksController.resumeTask);
 router.patch("/:taskId/completeTask", tasksController.completTask);
+router.get("/:taskId/getHistory", tasksController.getHistory);
 
 module.exports = router;

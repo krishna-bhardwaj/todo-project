@@ -65,8 +65,7 @@ const updateTask = async (req, res, next, action) => {
 
     if (action == TASK_ACTIONS.PAUSE || TASK_ACTIONS.COMPLETE) {
       durationIncrement =
-        new Date().getMilliseconds() -
-        task.lastAction.timeStamp.getMilliseconds();
+        new Date().getTime() - task.lastAction.timeStamp.getTime();
     }
 
     task.lastAction = {
@@ -171,4 +170,14 @@ exports.resumeTask = async (req, res, next) => {
 
 exports.completTask = async (req, res, next) => {
   updateTask(req, res, next, TASK_ACTIONS.COMPLETE);
+};
+
+exports.getHistory = async (req, res, next) => {
+  try {
+    const taskId = req.params.taskId;
+    const actions = await TaskAction.find({ taskId });
+    res.status(200).json(actions);
+  } catch (err) {
+    next(err);
+  }
 };

@@ -6,7 +6,7 @@ import taskApi from "../../../services/tasks";
 import { motion } from "framer-motion";
 import TaskActions from "./task-actions";
 
-const TaskItem = ({ task }) => {
+const TaskItem = ({ task, handleGetHistory }) => {
   const [isReadOnly, setReadOnly] = useState(true);
 
   const inputRef = useRef();
@@ -64,7 +64,7 @@ const TaskItem = ({ task }) => {
           />
           <p className="text-xs text-gray-500 capitalize">{taskStatus}</p>
         </div>
-        <TaskActions task={task} />
+        <TaskActions task={task} handleGetHistory={handleGetHistory} />
       </div>
 
       <ActionButton onClick={toggleEditMode}>

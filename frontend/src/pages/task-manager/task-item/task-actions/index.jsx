@@ -4,13 +4,12 @@ import { taskApi } from "../../../../services";
 import { getTaskStatus } from "../../../../utils";
 import { CirclePlay, CircleCheck, CirclePause, History } from "lucide-react";
 
-const TaskActions = (task) => {
+const TaskActions = ({ task, handleGetHistory }) => {
   const [startTask] = taskApi.useStartTaskMutation();
   const [pauseTask] = taskApi.usePauseTaskMutation();
   const [resumeTask] = taskApi.useResumeTaskMutation();
   const [completeTask] = taskApi.useCompleteTaskMutation();
-
-  const taskStatus = getTaskStatus(task.lastAction.name);
+  const taskStatus = getTaskStatus(task.lastAction.name || "");
 
   const handleStart = () => {
     if (!task.id) return;
@@ -66,6 +65,7 @@ const TaskActions = (task) => {
       <SecondaryActionButton
         icon={<History size={24} />}
         label="See Task History"
+        onClick={() => handleGetHistory(task.id)}
       />
     </div>
   );
