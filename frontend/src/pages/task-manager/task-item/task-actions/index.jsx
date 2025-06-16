@@ -1,14 +1,25 @@
 import { SecondaryActionButton } from "../../../../components";
 import { TASK_STATUS } from "../../../../constants";
+import { useModal } from "../../../../hooks";
 import { taskApi } from "../../../../services";
 import { getTaskStatus } from "../../../../utils";
-import { CirclePlay, CircleCheck, CirclePause, History } from "lucide-react";
+import {
+  CirclePlay,
+  CircleCheck,
+  CirclePause,
+  History as HistoryIcon,
+} from "lucide-react";
+import History from "../../history";
 
-const TaskActions = ({ task, handleGetHistory }) => {
+const TaskActions = ({ task }) => {
+  const historyModal = useModal();
+
   const [startTask] = taskApi.useStartTaskMutation();
   const [pauseTask] = taskApi.usePauseTaskMutation();
   const [resumeTask] = taskApi.useResumeTaskMutation();
   const [completeTask] = taskApi.useCompleteTaskMutation();
+  const [getHistory, historyState] = taskApi.useLazyGetHistoryQuery();
+
   const taskStatus = getTaskStatus(task.lastAction.name || "");
 
   const handleStart = () => {
@@ -29,6 +40,12 @@ const TaskActions = ({ task, handleGetHistory }) => {
   const handleComplete = () => {
     if (!task.id) return;
     completeTask(task.id);
+  };
+
+  const handleHistoryClick = () => {
+    if (!task.id) return;
+    historyModal.open();
+    getHistory(task.id);
   };
   return (
     <div className="flex">
@@ -63,9 +80,17 @@ const TaskActions = ({ task, handleGetHistory }) => {
         )}
 
       <SecondaryActionButton
-        icon={<History size={24} />}
+        icon={<HistoryIcon size={24} />}
         label="See Task History"
-        onClick={() => handleGetHistory(task.id)}
+        onClick={handleHistoryClick}
+      />
+      <History
+        taskName={task.title}
+        taskStatus={taskStatus}
+        data={historyState.data}
+        isLoading={historyState.isFetching}
+        open={historyModal.isOpen}
+        onClose={historyModal.close}
       />
     </div>
   );
