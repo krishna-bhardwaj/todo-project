@@ -53,14 +53,15 @@ const TaskItem = ({ task }) => {
       exit={{ opacity: 0, height: 0, padding: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex justify-between rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 w-1/3 bg-white min-w-96 ">
-        <div className="flex flex-col gap-1">
+      <div className="flex justify-between gap-5 rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 w-1/3 bg-white min-w-96 ">
+        <div className="flex flex-col gap-1 flex-1">
           <input
-            className="outline-none border-none placeholder-gray-400 bg-white"
+            className="outline-none border-none placeholder-gray-400 bg-white "
             defaultValue={task.title}
             readOnly={isReadOnly}
             ref={inputRef}
             onKeyDown={handleKeyDown}
+            title={task.title}
           />
           <p className="text-xs text-gray-500">{taskStatus}</p>
         </div>

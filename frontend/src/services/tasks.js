@@ -7,9 +7,10 @@ const taskApi = createApi({
   tagTypes: ["tasks"],
   endpoints: (builder) => ({
     getTask: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: "getTasks",
         method: "GET",
+        params,
       }),
       transformErrorResponse: baseErrorHandler,
       providesTags: ["tasks"],

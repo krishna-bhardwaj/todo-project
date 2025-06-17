@@ -12,10 +12,12 @@ const History = ({ data, isLoading, ...props }) => {
     >
       {isLoading && <div>loading...</div>}
       {!isLoading && data && (
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-2">
           <div className="px-4 py-3 border-b flex justify-between items-center gap-3">
-            <div className="flex gap-3 items-center">
-              <span className="text-2xl">{props.taskName}</span>
+            <div className="flex gap-3 items-center px-2">
+              <span className="text-2xl whitespace-break-spaces">
+                {props.taskName}
+              </span>
               <span className="text-xl text-gray-500 italic">
                 {props.taskStatus}
               </span>
@@ -26,10 +28,10 @@ const History = ({ data, isLoading, ...props }) => {
               onClick={props.onClose}
             />
           </div>
-          <div className="flex-1 py-3 px-4 flex gap-1 flex-col">
+          <div className="flex-1 pt-2 px-4 flex gap-1 flex-col overflow-auto max-h-96">
             {data.map((item) => (
               <div
-                className="flex justify-between items-center gap-2"
+                className="flex justify-between items-center gap-2 hover:bg-gray-200 px-2 rounded-md"
                 key={item.id}
               >
                 <div className="flex gap-1 overflow-x-auto scrollbar-hide flex-1">

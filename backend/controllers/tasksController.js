@@ -45,8 +45,36 @@ exports.addTask = async (req, res, next) => {
 exports.getTasks = async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const tasks = await Task.find({ userId });
-    res.status(200).json(tasks);
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const order = req.query.order === "desc" ? -1 : 1;
+
+    let status = req.query.status;
+
+    const filter = { userId };
+
+    if (status) {
+      const statusArray = status.split(",");
+
+      filter["lastAction.name"] = { $in: statusArray };
+    }
+
+    const totalCount = await Task.countDocuments(filter);
+
+    const tasks = await Task.find(filter)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const hasMore = page * limit < totalCount;
+
+    res.status(200).json({
+      tasks,
+      page,
+      limit,
+      totalCount,
+      hasMore,
+    });
   } catch (err) {
     next(err);
   }
