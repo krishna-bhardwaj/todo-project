@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check, UserLock } from "lucide-react";
 import { ActionButton } from "../../components";
 import { taskApi } from "../../services";
@@ -9,14 +9,28 @@ import { useSelector } from "react-redux";
 
 const TaskManager = () => {
   const inputRef = useRef();
+  const intersectionObserverRef = useRef();
+  const page = useRef(1);
+
+  const [tasks, setTasks] = useState([]);
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const { data: tasks = [] } = taskApi.useGetTaskQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-  });
+  const [getTasks, { data }] = taskApi.useLazyGetTaskQuery();
 
   const [addTask] = taskApi.useAddTaskMutation();
+
+  const fetchTasks = useCallback(
+    (page) => {
+      getTasks({ page })
+        .unwrap()
+        .then((res) => {
+          if (page === 1) setTasks((prev) => res.tasks);
+          else setTasks((prev) => [...prev, ...res.tasks]);
+        });
+    },
+    [getTasks]
+  );
 
   const handleKeyDown = (e) => {
     if (!isEnterPressed(e)) return;
@@ -31,6 +45,22 @@ const TaskManager = () => {
         inputRef.current.value = "";
       });
   };
+
+  useEffect(() => {
+    fetchTasks(page.current);
+  }, [fetchTasks]);
+
+  useEffect(() => {
+    const currentObserver = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (!entry.isIntersecting) return;
+      if (!data?.hasMore) return;
+      page.current = page.current + 1;
+      fetchTasks(page.current);
+    });
+    currentObserver.observe(intersectionObserverRef.current);
+    return () => currentObserver.disconnect();
+  }, [data?.hasMore, fetchTasks]);
 
   if (!isAuthenticated)
     return (
@@ -60,6 +90,7 @@ const TaskManager = () => {
             <TaskItem task={task} key={task.id} />
           ))}
         </AnimatePresence>
+        <div className="h-0" ref={intersectionObserverRef} />
       </div>
     </div>
   );
