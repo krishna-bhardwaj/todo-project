@@ -47,13 +47,13 @@ const TaskItem = ({ task }) => {
 
   return (
     <motion.div
-      className="w-full justify-center flex gap-5 pb-5 pt-1"
+      className="w-full justify-center flex gap-5 pb-2 pt-1 px-1"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, height: 0, padding: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex justify-between gap-5 rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 w-1/3 bg-white min-w-96 ">
+      <div className="flex justify-between gap-5 rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus-within:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 bg-white min-w-96 flex-1">
         <div className="flex flex-col gap-1 flex-1">
           <input
             className="outline-none border-none placeholder-gray-400 bg-white "
