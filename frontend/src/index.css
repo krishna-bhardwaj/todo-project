@@ -9,6 +9,12 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  .border-gradient {
+    border-width: 0.5px;
+    border-style: solid;
+    border-image: linear-gradient(to bottom, transparent, #000) 1;
+    border-image-slice: 0 1 1 1;
+  }
 }
 
 @tailwind base;
