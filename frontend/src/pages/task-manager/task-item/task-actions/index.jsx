@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import History from "../../history";
 
-const TaskActions = ({ task }) => {
+const TaskActions = ({ task, updateTask }) => {
   const historyModal = useModal();
 
   const [startTask] = taskApi.useStartTaskMutation();
@@ -24,22 +24,38 @@ const TaskActions = ({ task }) => {
 
   const handleStart = () => {
     if (!task.id) return;
-    startTask(task.id);
+    startTask(task.id)
+      .unwrap()
+      .then((res) => {
+        updateTask(task.id, res.task);
+      });
   };
 
   const handlePause = () => {
     if (!task.id) return;
-    pauseTask(task.id);
+    pauseTask(task.id)
+      .unwrap()
+      .then((res) => {
+        updateTask(task.id, res.task);
+      });
   };
 
   const handleResume = () => {
     if (!task.id) return;
-    resumeTask(task.id);
+    resumeTask(task.id)
+      .unwrap()
+      .then((res) => {
+        updateTask(task.id, res.task);
+      });
   };
 
   const handleComplete = () => {
     if (!task.id) return;
-    completeTask(task.id);
+    completeTask(task.id)
+      .unwrap()
+      .then((res) => {
+        updateTask(task.id, res.task);
+      });
   };
 
   const handleHistoryClick = () => {

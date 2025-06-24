@@ -115,7 +115,9 @@ const updateTask = async (req, res, next, action) => {
     await session.commitTransaction();
     session.endSession();
 
-    return res.status(200).json({ message: "Task updated Successfully" });
+    return res
+      .status(200)
+      .json({ message: "Task updated Successfully", task: savedTask });
   } catch (err) {
     await session.abortTransaction();
     session.endSession();
@@ -155,7 +157,9 @@ exports.updateTitle = async (req, res, next) => {
     await session.commitTransaction();
     session.endSession();
 
-    return res.status(200).json({ message: "Task title updated successfully" });
+    return res
+      .status(200)
+      .json({ message: "Task title updated successfully", task: savedTask });
   } catch (err) {
     await session.abortTransaction();
     session.endSession();
