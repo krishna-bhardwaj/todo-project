@@ -14,6 +14,7 @@ const TaskManager = () => {
   const page = useRef(1);
 
   const [tasks, setTasks] = useState([]);
+  const [filterAndSearchText, setFilterAndSearchText] = useState();
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
@@ -101,7 +102,10 @@ const TaskManager = () => {
             <Check strokeWidth={3} className="w-5 h-5" />
           </ActionButton>
         </div>
-        <Filters />
+        <Filters
+          filterAndSearchText={filterAndSearchText}
+          setFilterAndSearchText={setFilterAndSearchText}
+        />
 
         <div className="w-full flex flex-col items-center overflow-scroll pb-5 scrollbar-hide">
           <AnimatePresence>
