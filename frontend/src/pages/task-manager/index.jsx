@@ -18,6 +18,7 @@ const TaskManager = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const [getTasks, { data }] = taskApi.useLazyGetTaskQuery();
+  const [deleteTask] = taskApi.useDeleteTaskMutation();
 
   const [addTask] = taskApi.useAddTaskMutation();
 
@@ -42,16 +43,31 @@ const TaskManager = () => {
     if (!inputRef.current.value) return;
     addTask({ title: inputRef.current.value })
       .unwrap()
-      .then(() => {
+      .then((res) => {
         inputRef.current.value = "";
+        if (!data.hasMore) setTasks((prev) => [...prev, res.task]);
       });
   };
 
-  useEffect(() => {
-    fetchTasks(page.current);
-  }, [fetchTasks]);
+  const handleDelete = (taskId) => {
+    if (!taskId) return;
+    deleteTask(taskId)
+      .unwrap()
+      .then(() => {
+        setTasks((prev) => prev.filter((item) => item.id !== taskId));
+      });
+  };
+
+  const updateTask = (taskId, task) => {
+    setTasks((prev) => prev.map((item) => (item.id === taskId ? task : item)));
+  };
 
   useEffect(() => {
+    if (isAuthenticated) fetchTasks(page.current);
+  }, [fetchTasks, isAuthenticated]);
+
+  useEffect(() => {
+    if (!intersectionObserverRef.current) return;
     const currentObserver = new IntersectionObserver((entries) => {
       const entry = entries[0];
       if (!entry.isIntersecting) return;
@@ -73,7 +89,7 @@ const TaskManager = () => {
 
   return (
     <div className="w-full h-full bg-gray-100 flex justify-center">
-      <div className="flex flex-col gap-3 py-5 h-full items-center w-7/12">
+      <div className="flex flex-col gap-3 py-5 h-full items-center w-7/12 min-w-fit">
         <div className="w-full justify-center flex gap-5">
           <input
             className="rounded-xl p-4 shadow-[0_2px_8px_rgba(0,0,0,0.2)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.3)] focus:shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition-shadow duration-200 outline-none border-none placeholder-gray-400 bg-white w-2/3"
@@ -90,7 +106,12 @@ const TaskManager = () => {
         <div className="w-full flex flex-col items-center overflow-scroll pb-5 scrollbar-hide">
           <AnimatePresence>
             {tasks.map((task) => (
-              <TaskItem task={task} key={task.id} />
+              <TaskItem
+                task={task}
+                key={task.id}
+                handleDelete={handleDelete}
+                updateTask={updateTask}
+              />
             ))}
           </AnimatePresence>
           <div className="h-0" ref={intersectionObserverRef} />

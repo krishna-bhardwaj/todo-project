@@ -6,12 +6,11 @@ import taskApi from "../../../services/tasks";
 import { motion } from "framer-motion";
 import TaskActions from "./task-actions";
 
-const TaskItem = ({ task }) => {
+const TaskItem = ({ task, handleDelete, updateTask }) => {
   const [isReadOnly, setReadOnly] = useState(true);
 
   const inputRef = useRef();
 
-  const [deleteTask] = taskApi.useDeleteTaskMutation();
   const [updateTitle] = taskApi.useUpdaateTitleMutation();
 
   const taskStatus = getTaskStatus(task.lastAction.name);
@@ -22,12 +21,9 @@ const TaskItem = ({ task }) => {
       inputRef.current.value = task.title;
       return;
     }
-    updateTitle({ title: inputRef.current.value, taskId: task.id });
-  };
-
-  const handleDelete = () => {
-    if (!task.id) return;
-    deleteTask(task.id);
+    updateTitle({ title: inputRef.current.value, taskId: task.id })
+      .unwrap()
+      .then((res) => updateTask(task.id, res.task));
   };
 
   const toggleEditMode = () => {
@@ -65,7 +61,7 @@ const TaskItem = ({ task }) => {
           />
           <p className="text-xs text-gray-500">{taskStatus}</p>
         </div>
-        <TaskActions task={task} />
+        <TaskActions task={task} updateTask={updateTask} />
       </div>
 
       <ActionButton onClick={toggleEditMode}>
@@ -75,7 +71,7 @@ const TaskItem = ({ task }) => {
           <Check strokeWidth={3} className="w-5 h-5" />
         )}
       </ActionButton>
-      <ActionButton onClick={handleDelete}>
+      <ActionButton onClick={() => handleDelete(task.id)}>
         <Trash2 strokeWidth={2} />
       </ActionButton>
     </motion.div>
