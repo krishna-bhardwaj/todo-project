@@ -25,14 +25,18 @@ const TaskManager = () => {
 
   const fetchTasks = useCallback(
     (page) => {
-      getTasks({ page })
+      getTasks({
+        page,
+        status: filterAndSearchText?.status,
+        searchText: filterAndSearchText?.searchText,
+      })
         .unwrap()
         .then((res) => {
           if (page === 1) setTasks((prev) => res.tasks);
           else setTasks((prev) => [...prev, ...res.tasks]);
         });
     },
-    [getTasks]
+    [getTasks, filterAndSearchText]
   );
 
   const handleKeyDown = (e) => {
@@ -64,8 +68,11 @@ const TaskManager = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) fetchTasks(page.current);
-  }, [fetchTasks, isAuthenticated]);
+    if (isAuthenticated) {
+      page.current = 1;
+      fetchTasks(page.current);
+    }
+  }, [fetchTasks, isAuthenticated, filterAndSearchText]);
 
   useEffect(() => {
     if (!intersectionObserverRef.current) return;
