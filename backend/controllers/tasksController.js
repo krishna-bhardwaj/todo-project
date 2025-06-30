@@ -48,9 +48,9 @@ exports.getTasks = async (req, res, next) => {
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const order = req.query.order === "desc" ? -1 : 1;
 
-    let status = req.query.status;
+    const status = req.query.status;
+    const searchText = req.query.searchText;
 
     const filter = { userId };
 
@@ -58,6 +58,10 @@ exports.getTasks = async (req, res, next) => {
       const statusArray = status.split(",");
 
       filter["lastAction.name"] = { $in: statusArray };
+    }
+
+    if (searchText) {
+      filter["title"] = { $regex: searchText, $options: "i" };
     }
 
     const totalCount = await Task.countDocuments(filter);
@@ -209,6 +213,30 @@ exports.getHistory = async (req, res, next) => {
     const taskId = req.params.taskId;
     const actions = await TaskAction.find({ taskId });
     res.status(200).json(actions);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getSummary = async (req, res, next) => {
+  try {
+    const userId = req.user._id.toString();
+    const summary = await Task.aggregate([
+      { $match: { userId } },
+      {
+        $group: {
+          _id: "$lastAction.name",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const result = {};
+    for (const entry of summary) {
+      result[entry._id] = entry.count;
+    }
+
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }

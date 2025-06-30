@@ -4,6 +4,7 @@ import { baseQuery, baseErrorHandler } from "../utils";
 const taskApi = createApi({
   reducerPath: "taskApi",
   baseQuery,
+  tagTypes: ["tasksSummary"],
   endpoints: (builder) => ({
     getTask: builder.query({
       query: (params) => ({
@@ -20,6 +21,7 @@ const taskApi = createApi({
         body: payload,
       }),
       transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasksSummary"],
     }),
     deleteTask: builder.mutation({
       query: (taskId) => ({
@@ -27,6 +29,7 @@ const taskApi = createApi({
         method: "DELETE",
       }),
       transformErrorResponse: baseErrorHandler,
+      invalidatesTags: ["tasksSummary"],
     }),
     updaateTitle: builder.mutation({
       query: ({ taskId, title }) => ({
@@ -42,7 +45,7 @@ const taskApi = createApi({
         method: "PATCH",
       }),
       transformErrorResponse: baseErrorHandler,
-      invalidatesTags: ["tasks"],
+      invalidatesTags: ["tasksSummary"],
     }),
     completeTask: builder.mutation({
       query: (taskId) => ({
@@ -50,7 +53,7 @@ const taskApi = createApi({
         method: "PATCH",
       }),
       transformErrorResponse: baseErrorHandler,
-      invalidatesTags: ["tasks"],
+      invalidatesTags: ["tasksSummary"],
     }),
     pauseTask: builder.mutation({
       query: (taskId) => ({
@@ -58,7 +61,7 @@ const taskApi = createApi({
         method: "PATCH",
       }),
       transformErrorResponse: baseErrorHandler,
-      invalidatesTags: ["tasks"],
+      invalidatesTags: ["tasksSummary"],
     }),
     resumeTask: builder.mutation({
       query: (taskId) => ({
@@ -66,7 +69,7 @@ const taskApi = createApi({
         method: "PATCH",
       }),
       transformErrorResponse: baseErrorHandler,
-      invalidatesTags: ["tasks"],
+      invalidatesTags: ["tasksSummary"],
     }),
     getHistory: builder.query({
       query: (taskId) => ({
@@ -74,6 +77,14 @@ const taskApi = createApi({
         method: "GET",
       }),
       transformErrorResponse: baseErrorHandler,
+    }),
+    getSummary: builder.query({
+      query: () => ({
+        url: "getSummary",
+        method: "GET",
+      }),
+      transformErrorResponse: baseErrorHandler,
+      providesTags: ["tasksSummary"],
     }),
   }),
 });
