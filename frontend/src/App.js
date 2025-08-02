@@ -7,7 +7,7 @@ import { useEffect } from "react";
 const PageLoader = () => {
   return (
     <div className="h-full flex justify-center items-center bg-black/30">
-      <img src="./assets/pageLoader.svg" className="w-24 h-24" />
+      <img src="./assets/pageLoader.svg" className="w-24 h-24" alt="loader" />
     </div>
   );
 };
@@ -18,7 +18,7 @@ const App = () => {
 
   useEffect(() => {
     verify();
-  }, []);
+  }, [verify]);
 
   if (isFetching || isUninitialized) return <PageLoader />;
 
